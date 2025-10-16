@@ -6,6 +6,7 @@ public class Instance
     private List<EntityLine> _entityLines;
     private string _name = "";
     private int _cycle = 0;
+    public bool ShouldExit = false;
     public Instance()
     {
         _entities = new List<Entity>([]);
@@ -15,12 +16,12 @@ public class Instance
     {
         loadFromFile(filename);
     }
-    public void Tick(ref bool shouldExit)
+    public void Tick()
     {
         UntickEntities();
-        HandleInput(ref shouldExit);
+        HandleInput();
     }
-    private void HandleInput(ref bool shouldExit)
+    private void HandleInput()
     {
 
     }

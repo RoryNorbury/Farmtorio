@@ -1,8 +1,11 @@
 namespace Core;
 
+using System.Diagnostics;
+using SplashKitSDK;
+
 public enum ItemID
 {
-    none=0,
+    none = 0,
     potato,
     carrot,
     barley,
@@ -12,7 +15,7 @@ public class Game
 {
     private string _sourceDirectory = "..\\src";
     private Renderer _renderer;
-    private Instance _instance = null;
+    private Instance? _instance = null;
     MenuID _currentMenu = MenuID.MainMenu;
     Menu[] _menus =
     [
@@ -22,7 +25,7 @@ public class Game
     ];
     public Game()
     {
-        
+        _renderer = new Renderer(_sourceDirectory + "\\Textures");
     }
     ~Game()
     {
@@ -30,19 +33,39 @@ public class Game
     }
     public void Close()
     {
-        _instance.saveToFile(_sourceDirectory + "\\data\\saves");
+        if (_instance != null) { _instance.saveToFile(_sourceDirectory + "\\data\\saves"); }
         _renderer.Close();
     }
     public void Run()
     {
-        bool shouldExit = false;
-        while (!shouldExit)
+        try
         {
-            if (_currentMenu == MenuID.Instance)
+            bool shouldExit = false;
+            while (!shouldExit)
             {
-                _instance.Tick(ref shouldExit);
+                SplashKit.ProcessEvents();
+                if (_currentMenu == MenuID.Instance)
+                {
+                    if (_instance == null) { throw new Exception("_instance object is null, but you are trying to tick it"); }
+                    _instance.Tick();
+                    _renderer.RenderInstance(_instance);
+                    if (_instance.ShouldExit) { shouldExit = true; }
+                    ;
+                }
+                else
+                {
+                    Menu menu = _menus[(int)_currentMenu];
+                    menu.HandleInput();
+                    _renderer.RenderMenu(menu);
+                    _currentMenu = menu.NextMenuID;
+                    if (menu.ShouldExit) { shouldExit = true; }
+                }
+                if (SplashKit.QuitRequested()) { shouldExit = true; }
             }
-            else _menus[(int)_currentMenu].HandleInput(ref shouldExit);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Error thrown: {e.GetType()}: {e.Message}\nStack trace: {e.StackTrace}");
         }
     }
 }

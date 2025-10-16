@@ -3,14 +3,28 @@ namespace Core;
 
 public class Renderer
 {
-    private Bitmap[] _textures;
+    public Window window;
+    private Bitmap[]? _textures;
+    public Point2i Resolution = new Point2i(720, 360);
     public Renderer(string textureFilename)
     {
+        window = SplashKit.OpenWindow("Farmtorio", Resolution.X, Resolution.Y);
         LoadTexturesFromFile(textureFilename);
     }
     public void Close()
     {
         SplashKit.CloseAllWindows();
+    }
+    public void RenderMenu(Menu menu)
+    {
+        SplashKit.ClearScreen(menu.BackgroundColour);
+        menu.Draw();
+        SplashKit.DrawInterface();
+        SplashKit.RefreshScreen();
+    }
+    public void RenderInstance(Instance instance)
+    {
+        DrawEntities(instance.DrawableEntities());
     }
     public void DrawEntities(Entity[] entities)
     {
