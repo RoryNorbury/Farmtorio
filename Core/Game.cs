@@ -9,24 +9,28 @@ public enum ItemID
 }
 public class Game
 {
-    private Renderer renderer;
-    private Instance instance;
-    private MenuID currentMenu;
-    private Menu[] menus;
-    Game()
+    private Renderer _renderer;
+    private Instance _instance;
+    private MenuID _currentMenu;
+    private Menu[] _menus;
+    public Game()
     {
-
+        Initialise();
+    }
+    ~Game()
+    {
+        Close();
     }
     public void Initialise()
     {
-
+        throw new NotImplementedException();
     }
     public void Close()
     {
-
+        throw new NotImplementedException();
     }
     public void Run()
     {
-
+        throw new NotImplementedException();
     }
 }

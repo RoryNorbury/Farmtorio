@@ -2,5 +2,7 @@ namespace Core;
 
 public abstract class Menu
 {
-    private Renderer renderer;
+    public abstract int ID { get; }
+    public abstract void Draw();
+    public abstract void HandleInput();
 }
