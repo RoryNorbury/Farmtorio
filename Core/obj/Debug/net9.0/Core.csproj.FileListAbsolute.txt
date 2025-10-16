@@ -12,3 +12,4 @@ C:\Users\roryn\OneDrive - Swinburne University\Uni\COS20007\Custom Program\Farmt
 C:\Users\roryn\OneDrive - Swinburne University\Uni\COS20007\Custom Program\Farmtorio\Core\obj\Debug\net9.0\Core.pdb
 C:\Users\roryn\OneDrive - Swinburne University\Uni\COS20007\Custom Program\Farmtorio\Core\obj\Debug\net9.0\Core.genruntimeconfig.cache
 C:\Users\roryn\OneDrive - Swinburne University\Uni\COS20007\Custom Program\Farmtorio\Core\obj\Debug\net9.0\ref\Core.dll
+C:\Users\roryn\OneDrive - Swinburne University\Uni\COS20007\Custom Program\Farmtorio\Core\obj\Debug\net9.0\Core.sourcelink.json

@@ -2,6 +2,7 @@ namespace Core;
 
 public enum ItemID
 {
+    none=0,
     potato,
     carrot,
     barley,
@@ -9,28 +10,39 @@ public enum ItemID
 }
 public class Game
 {
+    private string _sourceDirectory = "..\\src";
     private Renderer _renderer;
-    private Instance _instance;
-    private MenuID _currentMenu;
-    private Menu[] _menus;
+    private Instance _instance = null;
+    MenuID _currentMenu = MenuID.MainMenu;
+    Menu[] _menus =
+    [
+        new MainMenu(),
+        new SelectInstanceMenu(),
+        new InstanceEscapeMenu()
+    ];
     public Game()
     {
-        Initialise();
+        
     }
     ~Game()
     {
         Close();
     }
-    public void Initialise()
-    {
-        throw new NotImplementedException();
-    }
     public void Close()
     {
-        throw new NotImplementedException();
+        _instance.saveToFile(_sourceDirectory + "\\data\\saves");
+        _renderer.Close();
     }
     public void Run()
     {
-        throw new NotImplementedException();
+        bool shouldExit = false;
+        while (!shouldExit)
+        {
+            if (_currentMenu == MenuID.Instance)
+            {
+                _instance.Tick(ref shouldExit);
+            }
+            else _menus[(int)_currentMenu].HandleInput(ref shouldExit);
+        }
     }
 }

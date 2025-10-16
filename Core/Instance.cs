@@ -4,6 +4,8 @@ public class Instance
 {
     private List<Entity> _entities;
     private List<EntityLine> _entityLines;
+    private string _name = "";
+    private int _cycle = 0;
     public Instance()
     {
         _entities = new List<Entity>([]);
@@ -13,9 +15,21 @@ public class Instance
     {
         loadFromFile(filename);
     }
-    public void Tick()
+    public void Tick(ref bool shouldExit)
+    {
+        UntickEntities();
+        HandleInput(ref shouldExit);
+    }
+    private void HandleInput(ref bool shouldExit)
     {
 
+    }
+    public void UntickEntities()
+    {
+        foreach (Entity entity in _entities)
+        {
+            entity.Ticked = false;
+        }
     }
     public Entity[] DrawableEntities()
     {

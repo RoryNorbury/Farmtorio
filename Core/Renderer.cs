@@ -8,6 +8,10 @@ public class Renderer
     {
         LoadTexturesFromFile(textureFilename);
     }
+    public void Close()
+    {
+        SplashKit.CloseAllWindows();
+    }
     public void DrawEntities(Entity[] entities)
     {
 
