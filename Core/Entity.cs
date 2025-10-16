@@ -1,7 +1,7 @@
 using SplashKitSDK;
 namespace Core;
 
-public enum Orientation
+public enum OrientationID
 {
     North,
     East,
@@ -10,10 +10,10 @@ public enum Orientation
 }
 public abstract class Entity
 {
-    public Point2D position;
-    public Orientation orientation;
-    public int textureIndex;
-
+    public Point2D Position;
+    public OrientationID Orientation;
+    public int TextureIndex;
+    public bool Ticked = false;
     public abstract void Tick();
 
 }
