@@ -17,9 +17,9 @@ public class Point
     public static implicit operator Point2D(Point point) => new Point2D { X = point.X, Y = point.Y };
 }
 
-public class Helpers
+public static class Helpers
 {
-    public Rectangle getMenuButtonRectangle(Point windowSize, int numButtons, int currentButton, double width, double height, double padding)
+    public static Rectangle getMenuButtonRectangle(Point windowSize, int numButtons, int currentButton, double width, double height, double padding)
     {
         double y0 = 0.5 * (windowSize.Y - numButtons * height - (numButtons - 1) * padding);
         Point p1 = new Point(
