@@ -16,5 +16,5 @@ public abstract class Menu
     public bool ShouldExit = false;
     public MenuID NextMenuID; // this is bad, should enforce declaring in overriding classes. Possibly make a property
     public abstract void Draw();
-    public abstract void HandleInput();
+    public abstract void HandleInput(Window window);
 }

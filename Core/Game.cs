@@ -55,7 +55,7 @@ public class Game
                 else
                 {
                     Menu menu = _menus[(int)_currentMenu];
-                    menu.HandleInput();
+                    menu.HandleInput(_renderer.window);
                     _renderer.RenderMenu(menu);
                     _currentMenu = menu.NextMenuID;
                     if (menu.ShouldExit) { shouldExit = true; }
