@@ -5,10 +5,10 @@ public class Renderer
 {
     public Window window;
     private Bitmap[]? _textures;
-    public Point2i Resolution = new Point2i(720, 360);
+    public Point Resolution = new Point(720, 360);
     public Renderer(string textureFilename)
     {
-        window = SplashKit.OpenWindow("Farmtorio", Resolution.X, Resolution.Y);
+        window = SplashKit.OpenWindow("Farmtorio", (int)Resolution.X, (int)Resolution.Y);
         LoadTexturesFromFile(textureFilename);
     }
     public void Close()
