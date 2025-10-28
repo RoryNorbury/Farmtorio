@@ -14,6 +14,5 @@ public abstract class Entity
     public OrientationID Orientation;
     public int TextureIndex;
     public bool Ticked = false;
-    public abstract void Tick();
-
+    public abstract void Tick(double dt);
 }
