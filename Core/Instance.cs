@@ -5,8 +5,10 @@ public class Instance
     // TODO: keep this sorted, so I can binary search it
     private List<Entity> _entities;
     private List<ConveyorLine> _conveyorLines;
-    private string _name = "";
+    public string _name = "";
+    public string Name {get => _name;}
     private int _cycle = 0;
+    public int Cycle {get => _cycle;}
     public bool ShouldExit = false;
     public Instance()
     {
@@ -45,6 +47,10 @@ public class Instance
     public Entity[] DrawableEntities()
     {
         throw new NotImplementedException();
+    }
+    public void AddEntity(Entity entity)
+    {
+        _entities.Add(entity);
     }
     public void loadFromFile(string filename)
     {
