@@ -25,7 +25,7 @@ public abstract class Entity
     }
     public virtual List<string> GetSaveData()
     {
-        return new List<string>([Position.X.ToString(), Position.Y.ToString(), Orientation.ToString(), TextureIndex.ToString()]);
+        return new List<string>([Position.X.ToString(), Position.Y.ToString(), ((int)Orientation).ToString(), TextureIndex.ToString()]);
     }
     // unused data should be stripped by child class before calling this
     public virtual void LoadFromData(List<string> data)
@@ -33,7 +33,7 @@ public abstract class Entity
         int i = data.Count - 4;
         Position.X = double.Parse(data[i].Replace(".", ","));
         i++;
-        Position.X = double.Parse(data[i].Replace(".", ","));
+        Position.Y = double.Parse(data[i].Replace(".", ","));
         i++;
         Orientation = (OrientationID)int.Parse(data[i]);
         i++;

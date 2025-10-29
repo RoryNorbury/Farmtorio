@@ -6,7 +6,7 @@ public class Instance
     private List<Entity> _entities;
     private List<ConveyorLine> _conveyorLines;
     public string _name = "";
-    public string Name {get => _name;}
+    public string Name {get => _name; set => _name = value;}
     private int _cycle = 0;
     public int Cycle {get => _cycle;}
     public bool ShouldExit = false;
@@ -44,9 +44,9 @@ public class Instance
             entity.Tick(dt);
         }
     }
-    public Entity[] DrawableEntities()
+    public List<Entity> DrawableEntities()
     {
-        throw new NotImplementedException();
+        return _entities;
     }
     public void AddEntity(Entity entity)
     {

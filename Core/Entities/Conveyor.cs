@@ -30,7 +30,7 @@ public class Conveyor : Entity
     public override void LoadFromData(List<string> data)
     {
         int i = data.Count - 1;
-        Speed = double.Parse(data[i].Replace(".", ","));
+        Speed = double.Parse(data[i]);
         data.RemoveAt(i);
         base.LoadFromData(data);
     }

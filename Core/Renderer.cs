@@ -43,7 +43,7 @@ enum TextureID
     }
     public void RenderInstance(Instance instance)
     {
-        DrawEntities(instance.DrawableEntities());
+        DrawEntities(instance.DrawableEntities().ToArray());
     }
     public void DrawEntities(Entity[] entities)
     {
