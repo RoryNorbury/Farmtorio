@@ -16,6 +16,13 @@ public abstract class Entity
     public bool Ticked = false;
     public abstract string EntityID { get; }
     public abstract void Tick(double dt);
+    public Entity() {}
+    public Entity(Point2D position, OrientationID orientation, int textureIndex)
+    {
+        Position = position;
+        Orientation = orientation;
+        TextureIndex = textureIndex;
+    }
     public virtual List<string> GetSaveData()
     {
         return new List<string>([Position.X.ToString(), Position.Y.ToString(), Orientation.ToString(), TextureIndex.ToString()]);
