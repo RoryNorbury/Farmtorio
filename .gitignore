@@ -3,3 +3,4 @@ obj/
 .vscode/
 .fake
 myeasylog.log
+src/data/saves
