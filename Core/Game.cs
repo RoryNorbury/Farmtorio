@@ -11,6 +11,7 @@ public enum ItemID
     barley,
     rice
 }
+// make singleton
 public class Game
 {
     private string _sourceDirectory = "..\\src";
@@ -33,7 +34,7 @@ public class Game
     }
     public void Close()
     {
-        if (_instance != null) { _instance.saveToFile(_sourceDirectory + "\\data\\saves"); }
+        if (_instance != null) { _instance.saveToFile(_sourceDirectory + "\\data\\saves" + _instance.Name + ".txt"); }
         _renderer.Close();
     }
     public void Run()
@@ -41,13 +42,14 @@ public class Game
         try
         {
             bool shouldExit = false;
+            double dt = 1.0 / 60.0;
             while (!shouldExit)
             {
                 SplashKit.ProcessEvents();
                 if (_currentMenu == MenuID.Instance)
                 {
                     if (_instance == null) { throw new Exception("_instance object is null, but you are trying to tick it"); }
-                    _instance.Tick();
+                    _instance.Tick(dt);
                     _renderer.RenderInstance(_instance);
                     if (_instance.ShouldExit) { shouldExit = true; }
                     ;
