@@ -14,5 +14,22 @@ public abstract class Entity
     public OrientationID Orientation;
     public int TextureIndex;
     public bool Ticked = false;
+    public abstract string EntityID { get; }
     public abstract void Tick(double dt);
+    public virtual List<string> GetSaveData()
+    {
+        return new List<string>([Position.X.ToString(), Position.Y.ToString(), Orientation.ToString(), TextureIndex.ToString()]);
+    }
+    // unused data should be stripped by child class before calling this
+    public virtual void LoadFromData(List<string> data)
+    {
+        int i = data.Count - 4;
+        Position.X = double.Parse(data[i].Replace(".", ","));
+        i++;
+        Position.X = double.Parse(data[i].Replace(".", ","));
+        i++;
+        Orientation = (OrientationID)int.Parse(data[i]);
+        i++;
+        TextureIndex = int.Parse(data[i]);
+    }
 }

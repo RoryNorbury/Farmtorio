@@ -1,6 +1,7 @@
 namespace Core;
 
-public abstract class Conveyor : Entity
+// TODO: save and load items on conveyors
+public class Conveyor : Entity
 {
     // effectively acts as padding between items (tiles)
     public static double ItemSize = 1.0;
@@ -10,14 +11,32 @@ public abstract class Conveyor : Entity
     public List<ConveyorItem> Items = [];
     // entity in front of this one
     public Entity? NextEntity = null;
+    public Conveyor() {}
     public Conveyor(double speed)
     {
         Speed = speed;
+    }
+    public Conveyor(List<ConveyorItem> items)
+    {
+        Items = items;
     }
     public Conveyor(double speed, List<ConveyorItem> items)
     {
         Speed = speed;
         Items = items;
+    }
+    public override List<string> GetSaveData()
+    {
+        List<string> data = base.GetSaveData();
+        data.Add(Speed.ToString());
+        return data;
+    }
+    public override void LoadFromData(List<string> data)
+    {
+        int i = data.Count - 1;
+        Speed = double.Parse(data[i].Replace(".", ","));
+        data.RemoveAt(i);
+        base.LoadFromData(data);
     }
     public override void Tick(double dt)
     {
@@ -77,4 +96,5 @@ public abstract class Conveyor : Entity
             }
         }
     }
+    public override string EntityID => "Conveyor";
 }

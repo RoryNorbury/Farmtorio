@@ -11,16 +11,17 @@ enum TextureID
     Farm,
     Depot,
 }
-string[] mtextureFilenames = [
-    "conveyor.png",
-    "loader.png",
-    "splitter.png",
-    "manufactory.png",
-    "farm.png",
-    "depot.png",
-];
-public class Renderer
-{
+    public class Renderer
+    {
+    string[] textureFilenames =
+    [
+        "conveyor.png",
+        "loader.png",
+        "splitter.png",
+        "manufactory.png",
+        "farm.png",
+        "depot.png",
+    ];
     public Window window;
     private Bitmap[]? _textures;
     public Point Resolution = new Point(720, 360);
