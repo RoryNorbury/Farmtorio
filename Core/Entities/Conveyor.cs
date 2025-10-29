@@ -1,3 +1,5 @@
+using SplashKitSDK;
+
 namespace Core;
 
 // TODO: save and load items on conveyors
@@ -11,20 +13,14 @@ public class Conveyor : Entity
     public List<ConveyorItem> Items = [];
     // entity in front of this one
     public Entity? NextEntity = null;
+    // I'm too lazy to write all the constructors, this is all you get
     public Conveyor() {}
-    public Conveyor(double speed)
-    {
-        Speed = speed;
-    }
-    public Conveyor(List<ConveyorItem> items)
-    {
-        Items = items;
-    }
-    public Conveyor(double speed, List<ConveyorItem> items)
+    public Conveyor(double speed, List<ConveyorItem> items, Point2D position, OrientationID orientation, int textureIndex) : base(position, orientation, textureIndex)
     {
         Speed = speed;
         Items = items;
     }
+    public Conveyor(double speed, List<ConveyorItem> items, Entity baseEntity) : this(speed, items, baseEntity.Position, baseEntity.Orientation, baseEntity.TextureIndex) {}
     public override List<string> GetSaveData()
     {
         List<string> data = base.GetSaveData();
