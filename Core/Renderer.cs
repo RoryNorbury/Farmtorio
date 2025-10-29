@@ -1,6 +1,24 @@
 using SplashKitSDK;
 namespace Core;
 
+// possible figure out a way to have these auto assigned
+enum TextureID
+{
+    Conveyor,
+    Loader,
+    Splitter,
+    Manufactory,
+    Farm,
+    Depot,
+}
+string[] mtextureFilenames = [
+    "conveyor.png",
+    "loader.png",
+    "splitter.png",
+    "manufactory.png",
+    "farm.png",
+    "depot.png",
+];
 public class Renderer
 {
     public Window window;
