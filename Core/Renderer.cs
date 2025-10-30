@@ -24,10 +24,9 @@ enum TextureID
     ];
     public Window window;
     private Bitmap[]? _textures;
-    public Point Resolution = new Point(720, 360);
     public Renderer(string textureFilename)
     {
-        window = SplashKit.OpenWindow("Farmtorio", (int)Resolution.X, (int)Resolution.Y);
+        window = SplashKit.OpenWindow("Farmtorio", Globals.WindowWidth, Globals.WindowHeight);
         LoadTexturesFromFile(textureFilename);
     }
     public void Close()
