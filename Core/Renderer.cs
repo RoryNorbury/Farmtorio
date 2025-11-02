@@ -42,7 +42,10 @@ enum TextureID
     }
     public void RenderInstance(Instance instance)
     {
+        SplashKit.ClearScreen();
         DrawEntities(instance.DrawableEntities().ToArray());
+        SplashKit.DrawInterface();
+        SplashKit.RefreshScreen();
     }
     public void DrawEntities(Entity[] entities)
     {

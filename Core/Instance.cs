@@ -17,7 +17,7 @@ public class Instance
     }
     public Instance(string filename) : this()
     {
-        loadFromFile(filename);
+        LoadFromFile(filename);
     }
     public void Tick(double dt)
     {
@@ -52,7 +52,7 @@ public class Instance
     {
         _entities.Add(entity);
     }
-    public void loadFromFile(string filename)
+    public void LoadFromFile(string filename)
     {
         try
         {
@@ -108,7 +108,7 @@ public class Instance
             throw new Exception("Could not load instance from file: " + e.Message);
         }
     }
-    public void saveToFile(string filename)
+    public void SaveToFile(string filename)
     {
         try
         {

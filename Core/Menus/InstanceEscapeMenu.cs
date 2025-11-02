@@ -13,8 +13,8 @@ public class InstanceEscapeMenu : Menu
     public override void Draw()
     {
     }
-    public override void HandleInput(Window window)
+    public override void HandleInput()
     {
-        NextMenuID = (MenuID) ID;
+        Game.NextMenuID = (MenuID) ID; // probably not needed anymore
     }
 }

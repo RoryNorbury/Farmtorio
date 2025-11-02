@@ -2,6 +2,11 @@ namespace Core;
 
 public static class Globals
 {
+    // Paths
+    public static string SourceDirectory = "..\\src\\";
+    public static string TexturesDirectory = SourceDirectory + "\\Textures\\";
+    public static string SavesDirectory = SourceDirectory + "\\data\\saves\\";
+
     // BASIS FOR ALL OTHER SIZE VALUES
     public static int WindowWidth = 1280;
 
@@ -12,4 +17,8 @@ public static class Globals
     public static int StandardElementHeight = WindowWidth * 3 / 64;
     public static int StandardElementPadding = WindowWidth * 3 / 128;
     public static int StandardElementBorder = WindowWidth / 640;
+
+    public static int SmallElementWidth = StandardElementWidth;
+    public static int SmallElementHeight = StandardElementHeight / 2;
+    public static int SmallElementPadding = StandardElementPadding / 2;
 }

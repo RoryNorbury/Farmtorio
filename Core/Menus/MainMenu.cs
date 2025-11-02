@@ -14,30 +14,26 @@ public class MainMenu : Menu
     {
         
     }
-    public override void HandleInput(Window window)
+    public override void HandleInput()
     {
-        // should find a way to have this happen automatically - put in game?
-        // should find a way to have this happen automatically - put in game?
-        NextMenuID = (MenuID)ID;
 
-        Point windowSize = new Point(window.Width, window.Height);
+        Game.NextMenuID = (MenuID)ID; // probably not needed anymore
+
+        Point windowSize = new Point(Globals.WindowWidth, Globals.WindowHeight);
         int numButtons = 3;
-        int buttonWidth = 240;
-        int buttonHeight = 60;
-        int buttonPadding = 30;
         int button = 0;
-        if (SplashKit.Button("Hi :)", Helpers.getMenuButtonRectangle(windowSize, numButtons, button, buttonWidth, buttonHeight, buttonPadding)))
+        if (SplashKit.Button("Hi :)", Helpers.getMenuButtonRectangle(windowSize, numButtons, button, Globals.StandardElementWidth, Globals.StandardElementHeight, Globals.StandardElementPadding)))
         {
             Console.WriteLine("Hello!");
         }
         button++;
-        if (SplashKit.Button("SelectInstance", Helpers.getMenuButtonRectangle(windowSize, numButtons, button, buttonWidth, buttonHeight, buttonPadding)))
+        if (SplashKit.Button("SelectInstance", Helpers.getMenuButtonRectangle(windowSize, numButtons, button, Globals.StandardElementWidth, Globals.StandardElementHeight, Globals.StandardElementPadding)))
         {
-            NextMenuID = MenuID.SelectInstanceMenu;
+            Game.NextMenuID = MenuID.SelectInstanceMenu;
             Console.WriteLine("Ok!");
         }
         button++;
-        if (SplashKit.Button("Quit", Helpers.getMenuButtonRectangle(windowSize, numButtons, button, buttonWidth, buttonHeight, buttonPadding)))
+        if (SplashKit.Button("Quit", Helpers.getMenuButtonRectangle(windowSize, numButtons, button, Globals.StandardElementWidth, Globals.StandardElementHeight, Globals.StandardElementPadding)))
         {
             Console.WriteLine("Bye!");
             ShouldExit = true;
