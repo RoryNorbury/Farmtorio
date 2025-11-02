@@ -17,7 +17,6 @@ public class MainMenu : Menu
     public override void HandleInput()
     {
 
-        Game.NextMenuID = (MenuID)ID; // probably not needed anymore
 
         Point windowSize = new Point(Globals.WindowWidth, Globals.WindowHeight);
         int numButtons = 3;

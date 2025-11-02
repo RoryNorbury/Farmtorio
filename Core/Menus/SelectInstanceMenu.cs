@@ -17,8 +17,6 @@ public class SelectInstanceMenu : Menu
     }
     public override void HandleInput()
     {
-        Game.NextMenuID = (MenuID)ID; // probably not needed anymore
-
         // will return to main menu if escape key pressed
         if (SplashKit.KeyDown(KeyCode.EscapeKey))
         {

@@ -15,6 +15,5 @@ public class InstanceEscapeMenu : Menu
     }
     public override void HandleInput()
     {
-        Game.NextMenuID = (MenuID) ID; // probably not needed anymore
     }
 }
