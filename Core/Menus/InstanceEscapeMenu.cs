@@ -34,7 +34,7 @@ public class InstanceEscapeMenu : Menu
         button++;
         if (SplashKit.Button("Save Game", Helpers.getMenuButtonRectangle(windowSize, numButtons, button, Globals.StandardElementWidth, Globals.StandardElementHeight, Globals.StandardElementPadding)))
         {
-            // Game.NextMenuID = MenuID.SaveInstanceMenu;
+            Game.NextMenuID = MenuID.SaveInstanceMenu;
         }
         button++;
         if (SplashKit.Button("Load Game", Helpers.getMenuButtonRectangle(windowSize, numButtons, button, Globals.StandardElementWidth, Globals.StandardElementHeight, Globals.StandardElementPadding)))

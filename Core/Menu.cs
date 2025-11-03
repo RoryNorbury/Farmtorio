@@ -7,6 +7,7 @@ public enum MenuID
     MainMenu,
     SelectInstanceMenu,
     InstanceEscapeMenu,
+    SaveInstanceMenu,
     Instance
 }
 public abstract class Menu

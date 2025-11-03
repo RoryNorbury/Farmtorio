@@ -15,7 +15,7 @@ public enum ItemID
 public sealed class Game
 {
     // singleton stuff
-    private static Game _game = null;
+    private static Game? _game = null;
     public static Game GameInstance
     {
         get
@@ -36,7 +36,8 @@ public sealed class Game
     [
         new MainMenu(),
         new SelectInstanceMenu(),
-        new InstanceEscapeMenu()
+        new InstanceEscapeMenu(),
+        new SaveInstanceMenu()
     ];
     private Game()
     {
@@ -109,5 +110,13 @@ public sealed class Game
     public void UnloadInstance()
     {
         _instance = null;
+    }
+    public void SaveInstance(string filepath)
+    {
+        if (_instance == null)
+        {
+            throw new Exception("No instance loaded to save");
+        }
+        _instance.SaveToFile(filepath);
     }
 }

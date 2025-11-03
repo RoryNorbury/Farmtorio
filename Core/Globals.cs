@@ -23,5 +23,5 @@ public static class Globals
     public static int SmallElementWidth = StandardElementWidth;
     public static int SmallElementHeight = StandardElementHeight / 2;
     public static int SmallElementPadding = StandardElementPadding / 2;
-    public static Color BackgroundColor = SplashKit.RGBColor(200, 200, 200);
+    public static Color BackgroundColor = SplashKit.RGBColor(238, 238, 238);
 }
