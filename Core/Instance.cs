@@ -35,6 +35,22 @@ public class Instance
         {
             Game.NextMenuID = MenuID.InstanceEscapeMenu;
         }
+        if (SplashKit.KeyDown(KeyCode.WKey) || SplashKit.KeyDown(KeyCode.UpKey))
+        {
+            Camera.Y += Globals.CameraSpeed;
+        }
+        if (SplashKit.KeyDown(KeyCode.AKey) || SplashKit.KeyDown(KeyCode.LeftKey))
+        {
+            Camera.X -= Globals.CameraSpeed;
+        }
+        if (SplashKit.KeyDown(KeyCode.SKey) || SplashKit.KeyDown(KeyCode.DownKey))
+        {
+            Camera.Y -= Globals.CameraSpeed;
+        }
+        if (SplashKit.KeyDown(KeyCode.DKey) || SplashKit.KeyDown(KeyCode.RightKey))
+        {
+            Camera.X += Globals.CameraSpeed;
+        }
     }
     public void UntickEntities()
     {
@@ -89,12 +105,13 @@ public class Instance
                     Entity entity;
                     switch (entityID)
                     {
-                        case "loader": entity = new Loader(); break;
-                        case "Manufactory": entity = new Manufactory(); break;
-                        case "Farmer": entity = new Farmer(); break;
+                        // replace with another method to ensure it is consistent with EntityID enum
                         case "Conveyor": entity = new Conveyor(); break;
                         case "Loader": entity = new Loader(); break;
                         case "Splitter": entity = new Splitter(); break;
+                        case "Manufactory": entity = new Manufactory(); break;
+                        case "Farmer": entity = new Farmer(); break;
+                        case "Depot": entity = new Depot(); break;
                         default: throw new Exception("Cannot load entity: Unknown entityID: " + entityID);
                     }
                     try
@@ -108,6 +125,8 @@ public class Instance
                     _entities.Add(entity);
                 }
             }
+            Camera.X = 0;
+            Camera.Y = 0;
         }
         catch (Exception e)
         {
@@ -124,7 +143,7 @@ public class Instance
                 foreach (Entity entity in _entities)
                 {
                     List<string> data = entity.GetSaveData();
-                    data.Insert(0, entity.EntityID);
+                    data.Insert(0, Entity.EntityIDStrings[(int)entity.ID]);
                     writer.WriteLine(string.Join(",", data));
                 }
             }

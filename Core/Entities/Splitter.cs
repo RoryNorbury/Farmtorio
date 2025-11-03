@@ -6,5 +6,5 @@ public class Splitter : Entity
     {
         Ticked = true;
     }
-    public override string EntityID => "Splitter";
+    public override EntityID ID => EntityID.Splitter;
 }

@@ -92,5 +92,5 @@ public class Conveyor : Entity
             }
         }
     }
-    public override string EntityID => "Conveyor";
+    public override EntityID ID => EntityID.Conveyor;
 }

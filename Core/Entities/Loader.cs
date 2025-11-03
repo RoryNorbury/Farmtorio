@@ -6,5 +6,5 @@ public class Loader : Entity
     {
         Ticked = true;
     }
-    public override string EntityID => "Loader";
+    public override EntityID ID => EntityID.Loader;
 }

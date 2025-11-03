@@ -41,7 +41,7 @@ public sealed class Game
     ];
     private Game()
     {
-        _renderer = new Renderer(Globals.TexturesDirectory);
+        _renderer = new Renderer();
     }
     ~Game()
     {

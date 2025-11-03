@@ -1,6 +1,18 @@
 using SplashKitSDK;
 namespace Core;
 
+public enum EntityID
+{
+    Conveyor,
+    Loader,
+    Splitter,
+    Manufactory,
+    Farm,
+    Depot
+}
+
+
+
 public enum OrientationID
 {
     North,
@@ -14,7 +26,7 @@ public abstract class Entity
     public OrientationID Orientation;
     public int TextureIndex;
     public bool Ticked = false;
-    public abstract string EntityID { get; }
+    public abstract EntityID ID { get; }
     public abstract void Tick(double dt);
     public Entity() {}
     public Entity(Point2D position, OrientationID orientation, int textureIndex)
@@ -39,4 +51,15 @@ public abstract class Entity
         i++;
         TextureIndex = int.Parse(data[i]);
     }
+
+    // need a way to keep this and the id's coupled, or remove the need for both
+    public static string[] EntityIDStrings =
+    [
+        "Conveyor",
+        "Loader",
+        "Splitter",
+        "Manufactory",
+        "Farm",
+        "Depot",
+    ];
 }
