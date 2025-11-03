@@ -42,7 +42,7 @@ enum TextureID
     }
     public void RenderInstance(Instance instance)
     {
-        SplashKit.ClearScreen();
+        SplashKit.ClearScreen(Globals.BackgroundColor);
         DrawEntities(instance.DrawableEntities().ToArray());
         SplashKit.DrawInterface();
         SplashKit.RefreshScreen();
@@ -58,5 +58,9 @@ enum TextureID
     private void LoadTexturesFromFile(string filename)
     {
         _textures = new Bitmap[0];
+    }
+    private void DrawGrid()
+    {
+        
     }
 }
