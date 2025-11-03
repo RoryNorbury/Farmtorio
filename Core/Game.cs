@@ -117,6 +117,26 @@ public sealed class Game
         {
             throw new Exception("No instance loaded to save");
         }
+        _instance.Name = Path.GetFileNameWithoutExtension(filepath);
         _instance.SaveToFile(filepath);
+    }
+    public string InstanceName
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                throw new Exception("No instance loaded");
+            }
+            return _instance.Name;
+        }
+        set
+        {
+            if (_instance == null)
+            {
+                throw new Exception("No instance loaded");
+            }
+            _instance.Name = value;
+        }
     }
 }
