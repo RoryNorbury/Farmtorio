@@ -23,7 +23,6 @@ public class SelectInstanceMenu : Menu
             Game.NextMenuID = MenuID.MainMenu;
         }
 
-        // rename to element*Trait* ?
         int numButtons = 2;
         int numInstanceEntries = 4;
         Rectangle elementRect =
@@ -32,23 +31,17 @@ public class SelectInstanceMenu : Menu
             X = (Globals.WindowWidth - Globals.StandardElementWidth) / 2,
             Y = (Globals.WindowHeight - (Globals.StandardElementHeight * numButtons + Globals.SmallElementHeight * numInstanceEntries + Globals.StandardElementPadding * numButtons + Globals.StandardElementBorder * (numInstanceEntries + 1))) / 2,
             Width = Globals.StandardElementWidth,
-            Height = Globals.StandardElementHeight
+            Height = Globals.SmallElementHeight
         };
-        if (SplashKit.Button("Hi :)", elementRect))
-        {
-            Console.WriteLine("Hello!");
-        }
-        elementRect.Y += Globals.StandardElementHeight + Globals.StandardElementPadding;
-        if (SplashKit.Button("Go back", elementRect))
-        {
-            Game.NextMenuID = MenuID.MainMenu;
-        }
-        elementRect.Y += Globals.StandardElementHeight + Globals.StandardElementPadding;
+
+        // instance list box
+        elementRect.Y += Globals.SmallElementHeight;
         elementRect.Height = Globals.SmallElementHeight * numInstanceEntries + Globals.StandardElementBorder * (numInstanceEntries + 1);
         List<string> instanceNames = new List<string>(Directory.GetFiles(Globals.SavesDirectory, "*.txt"));
 
         // display available instances
         SplashKit.StartInset("SelectInstance", elementRect);
+        SplashKit.LabelElement("Select an instance to load:");
         for (int i = 0; i < instanceNames.Count; i++)
         {
             if (SplashKit.Button(instanceNames[i].Split('\\').Last().Replace(".txt", "")))
@@ -68,5 +61,13 @@ public class SelectInstanceMenu : Menu
             }
         }
         SplashKit.EndInset("SelectInstance");
+
+        // button to go back to main menu
+        elementRect.Y += Globals.SmallElementHeight * numInstanceEntries + Globals.StandardElementBorder * (numInstanceEntries + 1) + Globals.StandardElementPadding;
+        elementRect.Height = Globals.StandardElementHeight;
+        if (SplashKit.Button("Go back", elementRect))
+        {
+            Game.NextMenuID = MenuID.MainMenu;
+        }
     }
 }

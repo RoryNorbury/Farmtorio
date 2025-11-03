@@ -1,5 +1,7 @@
 namespace Core;
 
+using SplashKitSDK;
+
 public class Instance
 {
     // TODO: keep this sorted, so I can binary search it
@@ -28,7 +30,11 @@ public class Instance
     }
     private void HandleInput()
     {
-
+        // will open escape menu if escape key pressed
+        if (SplashKit.KeyDown(KeyCode.EscapeKey))
+        {
+            Game.NextMenuID = MenuID.InstanceEscapeMenu;
+        }
     }
     public void UntickEntities()
     {

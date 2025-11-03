@@ -65,6 +65,7 @@ public sealed class Game
                     if (_instance == null) { throw new Exception("_instance object is null, but you are trying to tick it"); }
                     _instance.Tick(dt);
                     _renderer.RenderInstance(_instance);
+                    _currentMenu = NextMenuID;
                     if (_instance.ShouldExit) { shouldExit = true; }
                 }
                 else
@@ -83,6 +84,10 @@ public sealed class Game
             Console.WriteLine($"Error thrown: {e.GetType()}: {e.Message}\nStack trace: {e.StackTrace}");
         }
     }
+    public static void NewInstance()
+    {
+        _instance = new Instance();
+    }
     public static void LoadInstance(string filepath)
     {
         try
@@ -100,5 +105,9 @@ public sealed class Game
         {
             throw new Exception("Could not load instance: " + e.Message);
         }
+    }
+    public void UnloadInstance()
+    {
+        _instance = null;
     }
 }

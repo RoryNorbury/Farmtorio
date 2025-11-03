@@ -16,25 +16,22 @@ public class MainMenu : Menu
     }
     public override void HandleInput()
     {
-
-
         Point windowSize = new Point(Globals.WindowWidth, Globals.WindowHeight);
         int numButtons = 3;
         int button = 0;
-        if (SplashKit.Button("Hi :)", Helpers.getMenuButtonRectangle(windowSize, numButtons, button, Globals.StandardElementWidth, Globals.StandardElementHeight, Globals.StandardElementPadding)))
+        if (SplashKit.Button("New Game", Helpers.getMenuButtonRectangle(windowSize, numButtons, button, Globals.StandardElementWidth, Globals.StandardElementHeight, Globals.StandardElementPadding)))
         {
-            Console.WriteLine("Hello!");
+            Game.NewInstance();
+            Game.NextMenuID = MenuID.Instance;
         }
         button++;
-        if (SplashKit.Button("SelectInstance", Helpers.getMenuButtonRectangle(windowSize, numButtons, button, Globals.StandardElementWidth, Globals.StandardElementHeight, Globals.StandardElementPadding)))
+        if (SplashKit.Button("Load Game", Helpers.getMenuButtonRectangle(windowSize, numButtons, button, Globals.StandardElementWidth, Globals.StandardElementHeight, Globals.StandardElementPadding)))
         {
             Game.NextMenuID = MenuID.SelectInstanceMenu;
-            Console.WriteLine("Ok!");
         }
         button++;
         if (SplashKit.Button("Quit", Helpers.getMenuButtonRectangle(windowSize, numButtons, button, Globals.StandardElementWidth, Globals.StandardElementHeight, Globals.StandardElementPadding)))
         {
-            Console.WriteLine("Bye!");
             ShouldExit = true;
         }
     }
