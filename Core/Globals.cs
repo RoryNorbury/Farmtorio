@@ -27,7 +27,7 @@ public static class Globals
     // Rendering
     public static int fps = 60;
     // represents movement speed of camera in world units per frame
-    public static double CameraSpeed = 4.0 / fps;
+    public static double CameraSpeed = 8.0 / fps;
     // represents amount of pixels per world unit
     public static double ZoomScale = 64.0f;
     public static Color BackgroundColor = SplashKit.RGBColor(238, 238, 238);

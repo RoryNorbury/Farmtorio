@@ -1,5 +1,6 @@
 using SplashKitSDK;
 namespace Core;
+
 public class InstanceEscapeMenu : Menu
 {
     public InstanceEscapeMenu() : base()
@@ -15,14 +16,11 @@ public class InstanceEscapeMenu : Menu
     }
     public override void HandleInput()
     {
-        // BUG: Flickers the menu if escape key held down
-        /*
-            // will return to main menu if escape key pressed
-            if (SplashKit.KeyDown(KeyCode.EscapeKey))
-            {
-                Game.NextMenuID = MenuID.Instance;
-            }
-        */
+        // will return to main menu if escape key pressed
+        if (SplashKit.KeyTyped(KeyCode.EscapeKey))
+        {
+            Game.NextMenuID = MenuID.Instance;
+        }
 
         Point windowSize = new Point(Globals.WindowWidth, Globals.WindowHeight);
         int numButtons = 5;

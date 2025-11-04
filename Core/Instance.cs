@@ -12,6 +12,7 @@ public class Instance
     private int _cycle = 0;
     public int Cycle {get => _cycle;}
     public bool ShouldExit = false;
+    private EntityID? cursorEntityID = null;
     public Instance()
     {
         _entities = new List<Entity>([]);
@@ -31,7 +32,7 @@ public class Instance
     private void HandleInput()
     {
         // will open escape menu if escape key pressed
-        if (SplashKit.KeyDown(KeyCode.EscapeKey))
+        if (SplashKit.KeyTyped(KeyCode.EscapeKey))
         {
             Game.NextMenuID = MenuID.InstanceEscapeMenu;
         }
@@ -51,6 +52,20 @@ public class Instance
         {
             Camera.X += Globals.CameraSpeed;
         }
+
+        // allows the selection of entities to place
+        for (int i = 0; i <= (int)EntityID.Depot; i++)
+        {
+            if (SplashKit.KeyTyped((KeyCode)((int)KeyCode.Num0Key + i + 1)))
+            {
+                cursorEntityID = (EntityID)i;
+            }
+        }
+        if (SplashKit.KeyTyped(KeyCode.Num0Key))
+        {
+            cursorEntityID = null;
+        }
+
     }
     public void UntickEntities()
     {
@@ -68,7 +83,42 @@ public class Instance
     }
     public List<Entity> DrawableEntities()
     {
-        return _entities;
+        List<Entity> ret = new List<Entity>(_entities);
+        if (cursorEntityID != null)
+        {
+            // add a preview entity at the mouse position
+            Point2D mousePos = SplashKit.MousePosition();
+            double worldX = Math.Floor((mousePos.X - (Globals.WindowWidth - Globals.ZoomScale) / 2) / Globals.ZoomScale) + Camera.X;
+            double worldY = -Math.Floor((mousePos.Y - (Globals.WindowHeight - Globals.ZoomScale) / 2) / Globals.ZoomScale) + Camera.Y;
+            Point2D entityPos = SplashKit.PointAt(worldX, worldY);
+            Entity previewEntity;
+            switch (cursorEntityID)
+            {
+                case EntityID.Conveyor:
+                    previewEntity = new Conveyor();
+                    break;
+                case EntityID.Loader:
+                    previewEntity = new Loader();
+                    break;
+                case EntityID.Splitter:
+                    previewEntity = new Splitter();
+                    break;
+                case EntityID.Manufactory:
+                    previewEntity = new Manufactory();
+                    break;
+                case EntityID.Farm:
+                    previewEntity = new Farmer();
+                    break;
+                case EntityID.Depot:
+                    previewEntity = new Depot();
+                    break;
+                default:
+                    throw new Exception("Invalid cursor entity ID");
+            }
+            previewEntity.Position = entityPos;
+            ret.Add(previewEntity);
+        }
+        return ret;
     }
     public void AddEntity(Entity entity)
     {
@@ -110,9 +160,9 @@ public class Instance
                         case "Loader": entity = new Loader(); break;
                         case "Splitter": entity = new Splitter(); break;
                         case "Manufactory": entity = new Manufactory(); break;
-                        case "Farmer": entity = new Farmer(); break;
+                        case "Farm": entity = new Farmer(); break;
                         case "Depot": entity = new Depot(); break;
-                        default: throw new Exception("Cannot load entity: Unknown entityID: " + entityID);
+                        default: throw new Exception($"Cannot load entity: Unknown entityID: '{entityID}'");
                     }
                     try
                     {
@@ -120,7 +170,7 @@ public class Instance
                     }
                     catch (Exception e)
                     {
-                        throw new Exception("Cannot load entity: " + e.Message);
+                        throw new Exception($"Cannot load entity of type '{entityID}': {e.Message}");
                     }
                     _entities.Add(entity);
                 }
