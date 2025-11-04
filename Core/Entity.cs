@@ -43,7 +43,12 @@ public abstract class Entity
     // unused data should be stripped by child class before calling this
     public virtual void LoadFromData(List<string> data)
     {
-        int i = data.Count - 4;
+        // could change to < for future proofing
+        if (data.Count != 4)
+        {
+            throw new Exception("Class 'Entity Base' requires 4 entries, " + data.Count + " provided.");
+        }
+        int i = 0;
         Position.X = double.Parse(data[i].Replace(".", ","));
         i++;
         Position.Y = double.Parse(data[i].Replace(".", ","));

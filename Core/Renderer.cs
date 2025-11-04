@@ -28,7 +28,6 @@ public class Renderer
         SplashKit.ClearScreen(Globals.BackgroundColor);
         DrawGrid();
         DrawEntities(instance.DrawableEntities().ToArray());
-        Console.WriteLine("Camera position: " + Camera.X + ", " + Camera.Y);
         SplashKit.DrawInterface();
         SplashKit.RefreshScreen((uint)Globals.fps);
     }

@@ -29,6 +29,10 @@ public class Conveyor : Entity
     }
     public override void LoadFromData(List<string> data)
     {
+        if (data.Count < 1)
+        {
+            throw new Exception($"Class 'Conveyor' requires at least 1 entry, {data.Count} provided.");
+        }
         int i = data.Count - 1;
         Speed = double.Parse(data[i]);
         data.RemoveAt(i);
