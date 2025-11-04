@@ -24,6 +24,7 @@ public abstract class Entity
 {
     public Point2D Position;
     public OrientationID Orientation;
+    public virtual bool isDirectional => true;
     public int TextureIndex;
     public bool Ticked = false;
     public abstract EntityID ID { get; }

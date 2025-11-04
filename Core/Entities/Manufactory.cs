@@ -7,4 +7,5 @@ public class Manufactory : Entity
         Ticked = true;
     }
     public override EntityID ID => EntityID.Manufactory;
+    public override bool isDirectional => false;
 }

@@ -2,9 +2,9 @@ using SplashKitSDK;
 namespace Core;
 
 
-    // TODO: make my own camera class, that allows zooming
-    public class Renderer
-    {
+// TODO: make my own camera class, that allows zooming
+public class Renderer
+{
     public Window window;
     private List<Bitmap> _textures = new List<Bitmap>();
     public Renderer()
@@ -43,20 +43,27 @@ namespace Core;
     {
         Bitmap texture = _textures[(int)entity.ID];
         DrawingOptions options = new DrawingOptions();
-        switch (entity.Orientation)
+        if (!entity.isDirectional)
         {
-            case OrientationID.East:
-                options = SplashKit.OptionRotateBmp(0);
-                break;
-            case OrientationID.South:
-                options = SplashKit.OptionRotateBmp(90);
-                break;
-            case OrientationID.West:
-                options = SplashKit.OptionRotateBmp(180);
-                break;
-            case OrientationID.North:
-                options = SplashKit.OptionRotateBmp(270);
-                break;
+            options = SplashKit.OptionRotateBmp(0);
+        }
+        else
+        {
+            switch (entity.Orientation)
+            {
+                case OrientationID.East:
+                    options = SplashKit.OptionRotateBmp(0);
+                    break;
+                case OrientationID.South:
+                    options = SplashKit.OptionRotateBmp(90);
+                    break;
+                case OrientationID.West:
+                    options = SplashKit.OptionRotateBmp(180);
+                    break;
+                case OrientationID.North:
+                    options = SplashKit.OptionRotateBmp(270);
+                    break;
+            }
         }
         // Note that y coordinate is flipped
         SplashKit.DrawBitmap(texture, ((entity.Position.X - Camera.X) * Globals.ZoomScale) + (Globals.WindowWidth - Globals.ZoomScale) / 2, -((entity.Position.Y - Camera.Y) * Globals.ZoomScale) + (Globals.WindowHeight - Globals.ZoomScale) / 2, options);
@@ -66,11 +73,11 @@ namespace Core;
     {
         try
         {
-        _textures = new List<Bitmap>();
-        for (int i = 0; i < Entity.EntityIDStrings.Length; i++)
-        {
-           _textures.Add(SplashKit.LoadBitmap(Entity.EntityIDStrings[i], Entity.EntityIDStrings[i] + ".png"));
-        }
+            _textures = new List<Bitmap>();
+            for (int i = 0; i < Entity.EntityIDStrings.Length; i++)
+            {
+                _textures.Add(SplashKit.LoadBitmap(Entity.EntityIDStrings[i], Entity.EntityIDStrings[i] + ".png"));
+            }
         }
         catch (Exception e)
         {
@@ -79,7 +86,6 @@ namespace Core;
     }
     private void DrawGrid()
     {
-        // PAIN!!!
         double xOffset = Globals.ZoomScale * (0.5 - (Camera.X - Math.Floor(Camera.X)));
         double yOffset = Globals.ZoomScale * (0.5 - (Camera.Y - Math.Floor(Camera.Y)));
         double x0 = xOffset + Globals.WindowWidth / 2 - Math.Floor(Globals.WindowWidth / (2 * Globals.ZoomScale)) * Globals.ZoomScale;

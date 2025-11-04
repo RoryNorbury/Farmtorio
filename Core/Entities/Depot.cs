@@ -7,4 +7,5 @@ public class Depot : Entity
         Ticked = true;
     }
     public override EntityID ID => EntityID.Depot;
+    public override bool isDirectional => false;
 }

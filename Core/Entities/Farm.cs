@@ -7,4 +7,6 @@ public class Farmer : Entity
         Ticked = true;
     }
     public override EntityID ID => EntityID.Farm;
+    public override bool isDirectional => false;
+
 }
