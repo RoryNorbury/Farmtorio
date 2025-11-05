@@ -10,9 +10,9 @@ public class Instance
     private List<Entity> _entities;
     private List<ConveyorLine> _conveyorLines;
     public string _name = "";
-    public string Name {get => _name; set => _name = value;}
+    public string Name { get => _name; set => _name = value; }
     private int _cycle = 0;
-    public int Cycle {get => _cycle;}
+    public int Cycle { get => _cycle; }
     public bool ShouldExit = false;
     private EntityID? previewEntityID = null;
     private OrientationID previewOrientation = OrientationID.East;
@@ -80,10 +80,7 @@ public class Instance
         if (SplashKit.MouseDown(MouseButton.LeftButton) && previewEntityID != null)
         {
             // place entity at mouse position
-            Point2D mousePos = SplashKit.MousePosition();
-            double worldX = Math.Floor((mousePos.X - (Globals.WindowWidth - Globals.ZoomScale) / 2) / Globals.ZoomScale) + Camera.X;
-            double worldY = -Math.Floor((mousePos.Y - (Globals.WindowHeight - Globals.ZoomScale) / 2) / Globals.ZoomScale) + Camera.Y;
-            Point2D entityPos = SplashKit.PointAt(worldX, worldY);
+            Point2D entityPos = GridCoordinates(ScreenToWorldCoords(SplashKit.MousePosition()));
             Entity newEntity = EntityFactory.CreateEmptyEntity(previewEntityID.Value);
             newEntity.Position = entityPos;
             newEntity.Orientation = previewOrientation;
@@ -92,9 +89,7 @@ public class Instance
         // removes entity at mouse position
         if (SplashKit.MouseDown(MouseButton.RightButton))
         {
-            Point2D mousePos = SplashKit.MousePosition();
-            double worldX = Math.Floor((mousePos.X - (Globals.WindowWidth - Globals.ZoomScale) / 2) / Globals.ZoomScale) + Camera.X;
-            double worldY = -Math.Floor((mousePos.Y - (Globals.WindowHeight - Globals.ZoomScale) / 2) / Globals.ZoomScale) + Camera.Y;
+            Point2D worldPos = GridCoordinates(ScreenToWorldCoords(SplashKit.MousePosition()));
             // find entity at this position
             // TODO: optimize this search
             /*
@@ -107,7 +102,8 @@ public class Instance
             foreach (Entity entity in _entities)
             {
                 // comparpare integer values to avoid floating point errors
-                if ((int)entity.Position.X == (int)worldX && (int)entity.Position.Y == (int)worldY)
+                // actually this is the same as floring both values, idk which i prefer
+                if (Math.Floor(entity.Position.X) == worldPos.X && Math.Floor(entity.Position.Y) == worldPos.Y)
                 {
                     entityToRemove = entity;
                     break;
@@ -139,10 +135,7 @@ public class Instance
         if (previewEntityID != null)
         {
             // add a preview entity at the mouse position
-            Point2D mousePos = SplashKit.MousePosition();
-            double worldX = Math.Floor((mousePos.X - (Globals.WindowWidth - Globals.ZoomScale) / 2) / Globals.ZoomScale) + Camera.X;
-            double worldY = -Math.Floor((mousePos.Y - (Globals.WindowHeight - Globals.ZoomScale) / 2) / Globals.ZoomScale) + Camera.Y;
-            Point2D entityPos = SplashKit.PointAt(worldX, worldY);
+            Point2D entityPos = GridCoordinates(ScreenToWorldCoords(SplashKit.MousePosition()));
             Entity previewEntity = EntityFactory.CreateEmptyEntity(previewEntityID.Value);
             previewEntity.Position = entityPos;
             previewEntity.Orientation = previewOrientation;
@@ -243,5 +236,47 @@ public class Instance
         {
             throw new Exception("Could not save instance to file: " + e.Message);
         }
+    }
+    public static Point2D ScreenToWorldCoords(Point2D screenPos)
+    {
+        // undo centering of coordianates on screen
+        double x = screenPos.X - Globals.WindowWidth / 2;
+        double y = screenPos.Y - Globals.WindowHeight / 2;
+        // undo zoom so that coordinates are in world units
+        x /= Globals.ZoomScale;
+        y /= -Globals.ZoomScale;
+        // undo camera offset
+        x += Camera.X;
+        y += Camera.Y;
+        // offset by half a world unit
+        x += 0.5;
+        y += 0.5;
+        // y is inverted on screen
+        return new Point2D() { X = x, Y = y };
+    }
+    public static Point2D WorldToScreenCoords(Point2D worldPos)
+    {
+        // offset coordinates by camera position
+        double x = worldPos.X - Camera.X;
+        double y = worldPos.Y - Camera.Y;
+        // offset by half a world unit
+        x -= 0.5;
+        y += 0.5;
+        // apply zoom so that coordinates are in screen units
+        x *= Globals.ZoomScale;
+        y *= Globals.ZoomScale;
+        // center coordinates on screen so that 0, 0 is in the middle of the screen (when camera is at origin)
+        x = x + Globals.WindowWidth / 2;
+        y = -y + Globals.WindowHeight / 2;
+        // y is inverted on screen
+        return new Point2D() { X = x, Y = y };
+    }
+    public static Point2D GridCoordinates(Point2D worldPos)
+    {
+        return new Point2D()
+        {
+            X = Math.Floor(worldPos.X),
+            Y = Math.Floor(worldPos.Y)
+        };
     }
 }

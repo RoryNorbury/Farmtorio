@@ -64,8 +64,9 @@ public class Renderer
                     break;
             }
         }
-        // Note that y coordinate is flipped
-        SplashKit.DrawBitmap(texture, ((entity.Position.X - Camera.X) * Globals.ZoomScale) + (Globals.WindowWidth - Globals.ZoomScale) / 2, -((entity.Position.Y - Camera.Y) * Globals.ZoomScale) + (Globals.WindowHeight - Globals.ZoomScale) / 2, options);
+        Point2D drawPos = Instance.WorldToScreenCoords(entity.Position);
+        options.Camera = DrawingDest.DrawToScreen;
+        SplashKit.DrawBitmap(texture, drawPos.X, drawPos.Y, options);
     }
 
     private void LoadTexturesFromFile()
