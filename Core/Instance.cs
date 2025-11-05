@@ -90,25 +90,7 @@ public class Instance
         if (SplashKit.MouseDown(MouseButton.RightButton))
         {
             Point2D worldPos = GridCoordinates(ScreenToWorldCoords(SplashKit.MousePosition()));
-            // find entity at this position
-            // TODO: optimize this search
-            /*
-                Ideas:
-                - store entities in a sorted list based on position (rows by row)
-                - use chunks
-                - use a dictionary with position as key (i think this would only be faster for large numbers of entities)
-            */
-            Entity? entityToRemove = null;
-            foreach (Entity entity in _entities)
-            {
-                // comparpare integer values to avoid floating point errors
-                // actually this is the same as floring both values, idk which i prefer
-                if (Math.Floor(entity.Position.X) == worldPos.X && Math.Floor(entity.Position.Y) == worldPos.Y)
-                {
-                    entityToRemove = entity;
-                    break;
-                }
-            }
+            Entity? entityToRemove = GetEntityAtPosition(worldPos);
             if (entityToRemove != null)
             {
                 _entities.Remove(entityToRemove);
@@ -147,13 +129,9 @@ public class Instance
     public void AddEntity(Entity entity)
     {
         // check position isn't already occupied
-        foreach (Entity e in _entities)
+        if (GetEntityAtPosition(entity.Position) != null)
         {
-            // comparpare integer values to avoid floating point errors
-            if ((int)e.Position.X == (int)entity.Position.X && (int)e.Position.Y == (int)entity.Position.Y)
-            {
-                return;
-            }
+            return;
         }
         _entities.Add(entity);
     }
@@ -211,6 +189,8 @@ public class Instance
             }
             Camera.X = 0;
             Camera.Y = 0;
+            // this should be done for each entity after it is placed or an entity is placed around it
+            UpdateNextEntities();
         }
         catch (Exception e)
         {
@@ -278,5 +258,62 @@ public class Instance
             X = Math.Floor(worldPos.X),
             Y = Math.Floor(worldPos.Y)
         };
+    }
+    public Entity? GetEntityAtPosition(Point2D position)
+    // TODO: optimize this search
+    /*
+        Ideas:
+        - store entities in a sorted list based on position (rows by row)
+        - use chunks
+        - use a dictionary with position as key (i think this would only be faster for large numbers of entities)
+    */
+    {
+        foreach (Entity entity in _entities)
+        {
+            // compare integer values to avoid floating point errors
+            // actually this is the same as flooring both values, idk which i prefer
+            if ((int)entity.Position.X == (int)position.X && (int)entity.Position.Y == (int)position.Y)
+            {
+                return entity;
+            }
+        }
+        return null;
+    }
+    public void UpdateNextEntities()
+    {
+        // reset all next entities
+        foreach (Entity entity in _entities)
+        {
+            if (entity is Conveyor conveyor)
+            {
+                conveyor.NextEntity = null;
+            }
+        }
+        foreach (Entity entity in _entities)
+        {
+            // conveyors
+            if (entity is Conveyor conveyor)
+            {
+                // find entity in front of this one
+                Point2D nextPos = new Point2D() { X = conveyor.Position.X, Y = conveyor.Position.Y };
+                switch (conveyor.Orientation)
+                {
+                    case OrientationID.North:
+                        nextPos.Y -= 1;
+                        break;
+                    case OrientationID.East:
+                        nextPos.X += 1;
+                        break;
+                    case OrientationID.South:
+                        nextPos.Y += 1;
+                        break;
+                    case OrientationID.West:
+                        nextPos.X -= 1;
+                        break;
+                }
+                // assign next entity to the one at this position (null is properly handled)
+                conveyor.NextEntity = GetEntityAtPosition(nextPos);
+            }
+        }
     }
 }
