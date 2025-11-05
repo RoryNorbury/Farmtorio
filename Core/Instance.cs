@@ -4,6 +4,8 @@ using SplashKitSDK;
 
 public class Instance
 {
+    // TODO: make camera class
+    // TODO: Add functions for converting between screen and world coordinates
     // TODO: keep this sorted, so I can binary search it
     private List<Entity> _entities;
     private List<ConveyorLine> _conveyorLines;
@@ -12,7 +14,8 @@ public class Instance
     private int _cycle = 0;
     public int Cycle {get => _cycle;}
     public bool ShouldExit = false;
-    private EntityID? cursorEntityID = null;
+    private EntityID? previewEntityID = null;
+    private OrientationID previewOrientation = OrientationID.East;
     public Instance()
     {
         _entities = new List<Entity>([]);
@@ -35,6 +38,8 @@ public class Instance
         if (SplashKit.KeyTyped(KeyCode.EscapeKey))
         {
             Game.NextMenuID = MenuID.InstanceEscapeMenu;
+            // also reset preview entity
+            previewEntityID = null;
         }
         if (SplashKit.KeyDown(KeyCode.WKey) || SplashKit.KeyDown(KeyCode.UpKey))
         {
@@ -53,19 +58,89 @@ public class Instance
             Camera.X += Globals.CameraSpeed;
         }
 
-        // allows the selection of entities to place
+        // allows the selection of an entity to place
         for (int i = 0; i <= (int)EntityID.Depot; i++)
         {
             if (SplashKit.KeyTyped((KeyCode)((int)KeyCode.Num0Key + i + 1)))
             {
-                cursorEntityID = (EntityID)i;
+                previewEntityID = (EntityID)i;
             }
         }
+        // clears the selected placement entity
         if (SplashKit.KeyTyped(KeyCode.Num0Key))
         {
-            cursorEntityID = null;
+            previewEntityID = null;
         }
-
+        // rotates the preview entity
+        if (SplashKit.KeyTyped(KeyCode.RKey) && previewEntityID != null)
+        {
+            previewOrientation = (OrientationID)(((int)previewOrientation + 1) % 4);
+        }
+        // places the selected entity at the mouse position
+        if (SplashKit.MouseDown(MouseButton.LeftButton) && previewEntityID != null)
+        {
+            // place entity at mouse position
+            Point2D mousePos = SplashKit.MousePosition();
+            double worldX = Math.Floor((mousePos.X - (Globals.WindowWidth - Globals.ZoomScale) / 2) / Globals.ZoomScale) + Camera.X;
+            double worldY = -Math.Floor((mousePos.Y - (Globals.WindowHeight - Globals.ZoomScale) / 2) / Globals.ZoomScale) + Camera.Y;
+            Point2D entityPos = SplashKit.PointAt(worldX, worldY);
+            Entity newEntity;
+            switch (previewEntityID)
+            {
+                case EntityID.Conveyor:
+                    newEntity = new Conveyor();
+                    break;
+                case EntityID.Loader:
+                    newEntity = new Loader();
+                    break;
+                case EntityID.Splitter:
+                    newEntity = new Splitter();
+                    break;
+                case EntityID.Manufactory:
+                    newEntity = new Manufactory();
+                    break;
+                case EntityID.Farm:
+                    newEntity = new Farm();
+                    break;
+                case EntityID.Depot:
+                    newEntity = new Depot();
+                    break;
+                default:
+                    throw new Exception("Invalid cursor entity ID");
+            }
+            newEntity.Position = entityPos;
+            newEntity.Orientation = previewOrientation;
+            AddEntity(newEntity); // could check if this succeeds or not, but not currently necessary
+        }
+        // removes entity at mouse position
+        if (SplashKit.MouseDown(MouseButton.RightButton))
+        {
+            Point2D mousePos = SplashKit.MousePosition();
+            double worldX = Math.Floor((mousePos.X - (Globals.WindowWidth - Globals.ZoomScale) / 2) / Globals.ZoomScale) + Camera.X;
+            double worldY = -Math.Floor((mousePos.Y - (Globals.WindowHeight - Globals.ZoomScale) / 2) / Globals.ZoomScale) + Camera.Y;
+            // find entity at this position
+            // TODO: optimize this search
+            /*
+                Ideas:
+                - store entities in a sorted list based on position (rows by row)
+                - use chunks
+                - use a dictionary with position as key (i think this would only be faster for large numbers of entities)
+            */
+            Entity? entityToRemove = null;
+            foreach (Entity entity in _entities)
+            {
+                // comparpare integer values to avoid floating point errors
+                if ((int)entity.Position.X == (int)worldX && (int)entity.Position.Y == (int)worldY)
+                {
+                    entityToRemove = entity;
+                    break;
+                }
+            }
+            if (entityToRemove != null)
+            {
+                _entities.Remove(entityToRemove);
+            }
+        }
     }
     public void UntickEntities()
     {
@@ -84,7 +159,7 @@ public class Instance
     public List<Entity> DrawableEntities()
     {
         List<Entity> ret = new List<Entity>(_entities);
-        if (cursorEntityID != null)
+        if (previewEntityID != null)
         {
             // add a preview entity at the mouse position
             Point2D mousePos = SplashKit.MousePosition();
@@ -92,7 +167,7 @@ public class Instance
             double worldY = -Math.Floor((mousePos.Y - (Globals.WindowHeight - Globals.ZoomScale) / 2) / Globals.ZoomScale) + Camera.Y;
             Point2D entityPos = SplashKit.PointAt(worldX, worldY);
             Entity previewEntity;
-            switch (cursorEntityID)
+            switch (previewEntityID)
             {
                 case EntityID.Conveyor:
                     previewEntity = new Conveyor();
@@ -107,7 +182,7 @@ public class Instance
                     previewEntity = new Manufactory();
                     break;
                 case EntityID.Farm:
-                    previewEntity = new Farmer();
+                    previewEntity = new Farm();
                     break;
                 case EntityID.Depot:
                     previewEntity = new Depot();
@@ -116,12 +191,23 @@ public class Instance
                     throw new Exception("Invalid cursor entity ID");
             }
             previewEntity.Position = entityPos;
+            previewEntity.Orientation = previewOrientation;
             ret.Add(previewEntity);
         }
         return ret;
     }
+    // consider adding a way for checking if the entity was added successfully
     public void AddEntity(Entity entity)
     {
+        // check position isn't already occupied
+        foreach (Entity e in _entities)
+        {
+            // comparpare integer values to avoid floating point errors
+            if ((int)e.Position.X == (int)entity.Position.X && (int)e.Position.Y == (int)entity.Position.Y)
+            {
+                return;
+            }
+        }
         _entities.Add(entity);
     }
     public void LoadFromFile(string filename)
@@ -152,6 +238,7 @@ public class Instance
                     string entityID = data[0];
                     data.RemoveAt(0);
                     // potentially use an enumeration, but this makes the save more readable
+                    // I need a factory
                     Entity entity;
                     switch (entityID)
                     {
@@ -160,7 +247,7 @@ public class Instance
                         case "Loader": entity = new Loader(); break;
                         case "Splitter": entity = new Splitter(); break;
                         case "Manufactory": entity = new Manufactory(); break;
-                        case "Farm": entity = new Farmer(); break;
+                        case "Farm": entity = new Farm(); break;
                         case "Depot": entity = new Depot(); break;
                         default: throw new Exception($"Cannot load entity: Unknown entityID: '{entityID}'");
                     }
@@ -172,7 +259,7 @@ public class Instance
                     {
                         throw new Exception($"Cannot load entity of type '{entityID}': {e.Message}");
                     }
-                    _entities.Add(entity);
+                    AddEntity(entity);
                 }
             }
             Camera.X = 0;
@@ -190,10 +277,10 @@ public class Instance
             using (StreamWriter writer = new StreamWriter(filename))
             {
                 writer.WriteLine(_name + "," + _cycle.ToString());
-                foreach (Entity entity in _entities)
+                foreach (Entity e in _entities)
                 {
-                    List<string> data = entity.GetSaveData();
-                    data.Insert(0, Entity.EntityIDStrings[(int)entity.ID]);
+                    List<string> data = e.GetSaveData();
+                    data.Insert(0, Entity.EntityIDStrings[(int)e.ID]);
                     writer.WriteLine(string.Join(",", data));
                 }
             }

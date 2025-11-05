@@ -1,6 +1,5 @@
 namespace Core;
 
-using System.Diagnostics;
 using SplashKitSDK;
 
 public enum ItemID

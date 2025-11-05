@@ -5,6 +5,7 @@ namespace Core;
 // TODO: save and load items on conveyors
 public class Conveyor : Entity
 {
+    public override EntityID ID => EntityID.Conveyor;
     // effectively acts as padding between items (tiles)
     public static double ItemSize = 1.0;
     // speed at which items are moved (tiles per second)
@@ -14,13 +15,13 @@ public class Conveyor : Entity
     // entity in front of this one
     public Entity? NextEntity = null;
     // I'm too lazy to write all the constructors, this is all you get
-    public Conveyor() {}
+    public Conveyor() : base() { }
     public Conveyor(double speed, List<ConveyorItem> items, Point2D position, OrientationID orientation, int textureIndex) : base(position, orientation, textureIndex)
     {
         Speed = speed;
         Items = items;
     }
-    public Conveyor(double speed, List<ConveyorItem> items, Entity baseEntity) : this(speed, items, baseEntity.Position, baseEntity.Orientation, baseEntity.TextureIndex) {}
+    public Conveyor(double speed, List<ConveyorItem> items, Entity baseEntity) : this(speed, items, baseEntity.Position, baseEntity.Orientation, baseEntity.TextureIndex) { }
     public override List<string> GetSaveData()
     {
         List<string> data = base.GetSaveData();
@@ -96,5 +97,4 @@ public class Conveyor : Entity
             }
         }
     }
-    public override EntityID ID => EntityID.Conveyor;
 }
