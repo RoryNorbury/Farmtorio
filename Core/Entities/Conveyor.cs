@@ -50,6 +50,13 @@ public class Conveyor : Entity
         {
             return;
         }
+        // make sure next entity has already been processed (propogates forward)
+        // this should be ok to do for any entity type
+        // can cause infinite loops, should add extra "waitingForNextEntity" flag to prevent this (name not final)
+        if (!NextEntity.Ticked)
+        {
+            NextEntity.Tick(dt);
+        }
         // if next entity is a conveyor not facing the right direction, do not move items
         if (NextEntity is Conveyor)
         {
@@ -67,7 +74,7 @@ public class Conveyor : Entity
                 {
                     ConveyorItem nextItem = Items[i + 1];
                     double dist = nextItem.Progress - item.Progress; // distance between current and next item
-                                                                     // if there is space between items
+                    // if there is space between items
                     if (dist > ItemSize)
                     {
                         // if moving by dp will result in items that are too close, move them so the distance is equal to ItemSize
