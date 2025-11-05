@@ -6,8 +6,6 @@ namespace Core;
 public class Conveyor : Entity
 {
     public override EntityID ID => EntityID.Conveyor;
-    // effectively acts as padding between items (tiles)
-    public static double ItemSize = 1.0;
     // speed at which items are moved (tiles per second)
     public double Speed = 0.5;
     // needs to be stored in order
@@ -57,9 +55,10 @@ public class Conveyor : Entity
         {
             NextEntity.Tick(dt);
         }
-        // if next entity is a conveyor not facing the right direction, do not move items
         if (NextEntity is Conveyor)
         {
+            // if next entity is a conveyor not facing the right direction, do not move items
+            // this should actually be changed to handle corners and maybe merges
             if (Orientation != NextEntity.Orientation)
             {
                 return;
@@ -69,39 +68,21 @@ public class Conveyor : Entity
             for (int i = Items.Count - 1; i >= 0; i--)
             {
                 ConveyorItem item = Items[i];
-                // if there is another item in front
-                if (i < Items.Count - 2)
-                {
-                    ConveyorItem nextItem = Items[i + 1];
-                    double dist = nextItem.Progress - item.Progress; // distance between current and next item
-                    // if there is space between items
-                    if (dist > ItemSize)
-                    {
-                        // if moving by dp will result in items that are too close, move them so the distance is equal to ItemSize
-                        if (dist - ItemSize < dp)
-                        {
-                            item.Progress += dp - (dist - ItemSize);
-                        }
-                        else
-                        {
-                            item.Progress += dp;
-                        }
-                    }
-                }
                 // if this item is first
-                else
+                if (i == Items.Count - 1)
                 {
                     Conveyor nextConveyor = NextEntity as Conveyor;
                     if (nextConveyor.Items.Count > 0)
                     {
                         ConveyorItem nextItem = nextConveyor.Items[0];
                         double dist = nextItem.Progress - item.Progress + 1; // distance between current and next item
+                        
                         // only move if there is space between items
-                        if (dist > ItemSize)
+                        if (dist > Globals.ItemSize)
                         {
-                            if (dist - ItemSize < dp)
+                            if (dist - Globals.ItemSize < dp)
                             {
-                                item.Progress += dp - (dist - ItemSize);
+                                item.Progress += dp - (dist - Globals.ItemSize);
                             }
                             else
                             {
@@ -114,6 +95,39 @@ public class Conveyor : Entity
                                 nextConveyor.Items.Insert(0, item);
                                 Items.RemoveAt(i);
                             }
+                        }
+                    }
+                    else
+                    {
+                        if (item.Progress + dp >= 1.0)
+                        {
+                            // move item to next conveyor
+                            item.Progress = 0.0;
+                            nextConveyor.Items.Insert(0, item);
+                            Items.RemoveAt(i);
+                        }
+                        else
+                        {
+                            item.Progress += dp;
+                        }
+                    }
+                }
+                // if there is another item in front
+                else
+                {
+                    ConveyorItem nextItem = Items[i + 1];
+                    double dist = nextItem.Progress - item.Progress; // distance between current and next item
+                    // if there is space between items
+                    if (dist > Globals.ItemSize)
+                    {
+                        // if moving by dp will result in items that are too close, move them so the distance is equal to ItemSize
+                        if (dist - Globals.ItemSize < dp)
+                        {
+                            item.Progress += dp - (dist - Globals.ItemSize);
+                        }
+                        else
+                        {
+                            item.Progress += dp;
                         }
                     }
                 }

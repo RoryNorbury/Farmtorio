@@ -288,6 +288,10 @@ public class Instance
             {
                 conveyor.NextEntity = null;
             }
+            if (entity is Loader loader)
+            {
+                loader.NextEntity = null;
+            }
         }
         foreach (Entity entity in _entities)
         {
@@ -313,6 +317,34 @@ public class Instance
                 }
                 // assign next entity to the one at this position (null is properly handled)
                 conveyor.NextEntity = GetEntityAtPosition(nextPos);
+            }
+            if (entity is Loader loader)
+            {
+                // find entities in front of and behind this one
+                Point2D nextPos = new Point2D() { X = loader.Position.X, Y = loader.Position.Y };
+                Point2D prevPos = new Point2D() { X = loader.Position.X, Y = loader.Position.Y };
+                switch (loader.Orientation)
+                {
+                    case OrientationID.North:
+                        nextPos.Y -= 1;
+                        prevPos.Y += 1;
+                        break;
+                    case OrientationID.East:
+                        nextPos.X += 1;
+                        prevPos.X -= 1;
+                        break;
+                    case OrientationID.South:
+                        nextPos.Y += 1;
+                        prevPos.Y -= 1;
+                        break;
+                    case OrientationID.West:
+                        nextPos.X -= 1;
+                        prevPos.X += 1;
+                        break;
+                }
+                // assign next entity to the one at this position (null is properly handled)
+                loader.NextEntity = GetEntityAtPosition(nextPos);
+                loader.PreviousEntity = GetEntityAtPosition(prevPos);
             }
         }
     }
