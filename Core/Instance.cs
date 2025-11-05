@@ -84,30 +84,7 @@ public class Instance
             double worldX = Math.Floor((mousePos.X - (Globals.WindowWidth - Globals.ZoomScale) / 2) / Globals.ZoomScale) + Camera.X;
             double worldY = -Math.Floor((mousePos.Y - (Globals.WindowHeight - Globals.ZoomScale) / 2) / Globals.ZoomScale) + Camera.Y;
             Point2D entityPos = SplashKit.PointAt(worldX, worldY);
-            Entity newEntity;
-            switch (previewEntityID)
-            {
-                case EntityID.Conveyor:
-                    newEntity = new Conveyor();
-                    break;
-                case EntityID.Loader:
-                    newEntity = new Loader();
-                    break;
-                case EntityID.Splitter:
-                    newEntity = new Splitter();
-                    break;
-                case EntityID.Manufactory:
-                    newEntity = new Manufactory();
-                    break;
-                case EntityID.Farm:
-                    newEntity = new Farm();
-                    break;
-                case EntityID.Depot:
-                    newEntity = new Depot();
-                    break;
-                default:
-                    throw new Exception("Invalid cursor entity ID");
-            }
+            Entity newEntity = EntityFactory.CreateEmptyEntity(previewEntityID.Value);
             newEntity.Position = entityPos;
             newEntity.Orientation = previewOrientation;
             AddEntity(newEntity); // could check if this succeeds or not, but not currently necessary
@@ -166,30 +143,7 @@ public class Instance
             double worldX = Math.Floor((mousePos.X - (Globals.WindowWidth - Globals.ZoomScale) / 2) / Globals.ZoomScale) + Camera.X;
             double worldY = -Math.Floor((mousePos.Y - (Globals.WindowHeight - Globals.ZoomScale) / 2) / Globals.ZoomScale) + Camera.Y;
             Point2D entityPos = SplashKit.PointAt(worldX, worldY);
-            Entity previewEntity;
-            switch (previewEntityID)
-            {
-                case EntityID.Conveyor:
-                    previewEntity = new Conveyor();
-                    break;
-                case EntityID.Loader:
-                    previewEntity = new Loader();
-                    break;
-                case EntityID.Splitter:
-                    previewEntity = new Splitter();
-                    break;
-                case EntityID.Manufactory:
-                    previewEntity = new Manufactory();
-                    break;
-                case EntityID.Farm:
-                    previewEntity = new Farm();
-                    break;
-                case EntityID.Depot:
-                    previewEntity = new Depot();
-                    break;
-                default:
-                    throw new Exception("Invalid cursor entity ID");
-            }
+            Entity previewEntity = EntityFactory.CreateEmptyEntity(previewEntityID.Value);
             previewEntity.Position = entityPos;
             previewEntity.Orientation = previewOrientation;
             ret.Add(previewEntity);
