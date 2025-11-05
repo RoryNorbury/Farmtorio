@@ -86,18 +86,22 @@ public class Renderer
     }
     private void DrawGrid()
     {
-        double xOffset = Globals.ZoomScale * (0.5 - (Camera.X - Math.Floor(Camera.X)));
-        double yOffset = Globals.ZoomScale * (0.5 - (Camera.Y - Math.Floor(Camera.Y)));
-        double x0 = xOffset + Globals.WindowWidth / 2 - Math.Floor(Globals.WindowWidth / (2 * Globals.ZoomScale)) * Globals.ZoomScale;
-        double y0 = yOffset + Globals.WindowHeight / 2 - Math.Floor(Globals.WindowHeight / (2 * Globals.ZoomScale)) * Globals.ZoomScale;
+        // tell splashkit not to apply camera transformations
+        DrawingOptions options = SplashKit.OptionToScreen();
 
-        for (double x = x0; x < Globals.WindowWidth; x += Globals.ZoomScale)
+        // the offset from the tile grid, in screen coordinates
+        Point2D offset = Instance.WorldToScreenCoords(new Point2D() { X = Math.Floor(Camera.X), Y = Math.Floor(Camera.Y) });
+        // move offset to the top-left corner, while staying aligned to the grid
+        offset.X -= Globals.WindowWidth / (2 * Globals.ZoomScale) * Globals.ZoomScale;
+        offset.Y -= Globals.WindowWidth / (2 * Globals.ZoomScale) * Globals.ZoomScale;
+        // draw lines until the end of the screen
+        for (double x = offset.X; x < Globals.WindowWidth; x += Globals.ZoomScale)
         {
-            SplashKit.DrawLine(Globals.GridColor, x, 0, x, Globals.WindowHeight);
+            SplashKit.DrawLine(Globals.GridColor, x, 0, x, Globals.WindowHeight, options);
         }
-        for (double y = y0; y < Globals.WindowHeight; y += Globals.ZoomScale)
+        for (double y = offset.Y; y < Globals.WindowHeight; y += Globals.ZoomScale)
         {
-            SplashKit.DrawLine(Globals.GridColor, 0, Globals.WindowHeight - y, Globals.WindowWidth, Globals.WindowHeight - y);
+            SplashKit.DrawLine(Globals.GridColor, 0, y, Globals.WindowWidth, y, options);
         }
     }
 }
