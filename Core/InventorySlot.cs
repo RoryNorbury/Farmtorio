@@ -1,16 +1,18 @@
 namespace Core;
 
+// TODO: implement stack size limits
+// TODO: implement saving/loading
 public class InventorySlot
 {
     private ItemID _item = ItemID.none;
     public ItemID Item => _item;
-    private int _quantity = 0;
-    public int Quantity => _quantity;
+    private int _itemCount = 0;
+    public int ItemCount => _itemCount;
     public InventorySlot() { }
     public InventorySlot(ItemID item, int quantity)
     {
         _item = item;
-        _quantity = quantity;
+        _itemCount = quantity;
     }
     public bool AddItems(int quantity, ItemID itemID)
     {
@@ -18,12 +20,12 @@ public class InventorySlot
         if (_item == ItemID.none)
         {
             _item = itemID;
-            _quantity += quantity;
+            _itemCount += quantity;
             return true;
         }
         else if (_item == itemID)
         {
-            _quantity += quantity;
+            _itemCount += quantity;
             return true;
         }
         return false;
@@ -31,15 +33,20 @@ public class InventorySlot
     public bool RemoveItems(int quantity)
     {
         if (quantity <= 0) { throw new Exception($"You cant remove {quantity} items, you silly goose"); } // this should probably just return false
-        if (_quantity - quantity < 0)
+        if (_itemCount - quantity < 0)
         {
             return false;
         }
-        _quantity -= quantity;
-        if (_quantity == 0)
+        _itemCount -= quantity;
+        if (_itemCount == 0)
         {
             _item = ItemID.none;
         }
         return true;
+    }
+    public void Clear()
+    {
+        _item = ItemID.none;
+        _itemCount = 0;
     }
 }
