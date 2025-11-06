@@ -122,7 +122,7 @@ public class Loader : Entity
             {
                 foreach (InventorySlot slot in hasInput.InputSlots)
                 {
-                    if (slot.AddItems(1, item.ItemID)){ return true; }
+                    if (slot.AddItems(1, item.ItemID)) { return true; }
                 }
             }
             else
@@ -185,11 +185,11 @@ public class Loader : Entity
         if (previousEntity is Conveyor conveyor)
         {
             // conveyor needs to face into the loader (subject to change)
-            if (conveyor.Orientation != Orientation)
-            {
-                return false;
-            }
-            // only move item if it is at the end of the conveyor
+            // if (conveyor.Orientation != Orientation)
+            // {
+            //     return false;
+            // }
+            // do nothing if there are no items to move
             if (conveyor.Items.Count == 0)
             {
                 return false;
@@ -200,9 +200,18 @@ public class Loader : Entity
                 // if there is space for the item -- shouldn't this be checked first??
                 if (Items.Count == 0 || Items[0].Progress > Globals.ItemSize)
                 {
-                    // currently items may not move the full distance when moving into a loader
-                    Items.Insert(0, new ConveyorItem(conveyor.Items.Last().ItemID, 0));
-                    conveyor.Items.RemoveAt(conveyor.Items.Count - 1);
+                    // check each item to see if it is in grab range (only really useful for conveyors not facing the loader)
+                    foreach (ConveyorItem item in conveyor.Items)
+                    {
+                        // only grab items if they are within one itemsize of the center of the conveyor
+                        if (item.Progress <= Globals.ItemSize)
+                        {
+                            // currently items may not move the full distance when moving into a loader
+                            Items.Insert(0, new ConveyorItem(conveyor.Items.Last().ItemID, 0));
+                            conveyor.Items.RemoveAt(conveyor.Items.Count - 1);
+                            break;
+                        }
+                    }
                 }
             }
         }
