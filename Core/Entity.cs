@@ -5,7 +5,7 @@ public enum EntityID
 {
     Conveyor,
     Loader,
-    Splitter,
+    Router,
     Manufactory,
     Farm,
     Depot
@@ -63,7 +63,7 @@ public abstract class Entity
     [
         "Conveyor",
         "Loader",
-        "Splitter",
+        "Router",
         "Manufactory",
         "Farm",
         "Depot",

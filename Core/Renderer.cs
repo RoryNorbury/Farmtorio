@@ -78,7 +78,7 @@ public class Renderer
 
             bool drawn = false;
             // draw any items the entity has
-            // currently draws a circle for every entity with inventory slots, and a square for conveyors, loaders and splitters
+            // currently draws a circle for every entity with inventory slots, and a square for conveyors, loaders and Routers
             if (entity is IHasOutputSlots hasOutput)
             {
                 for (int i = 0; i < hasOutput.OutputSlots.Count; i++)

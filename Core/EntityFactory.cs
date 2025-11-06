@@ -8,7 +8,7 @@ public static class EntityFactory
         {
             case EntityID.Conveyor: return new Conveyor();
             case EntityID.Loader: return new Loader();
-            case EntityID.Splitter: return new Splitter();
+            case EntityID.Router: return new Router();
             case EntityID.Manufactory: return new Manufactory();
             case EntityID.Farm: return new Farm();
             case EntityID.Depot: return new Depot();
@@ -19,7 +19,7 @@ public static class EntityFactory
     {
         if (id == Entity.EntityIDStrings[(int)EntityID.Conveyor]) { return new Conveyor(); }
         if (id == Entity.EntityIDStrings[(int)EntityID.Loader]) { return new Loader(); }
-        if (id == Entity.EntityIDStrings[(int)EntityID.Splitter]) { return new Splitter(); }
+        if (id == Entity.EntityIDStrings[(int)EntityID.Router]) { return new Router(); }
         if (id == Entity.EntityIDStrings[(int)EntityID.Manufactory]) { return new Manufactory(); }
         if (id == Entity.EntityIDStrings[(int)EntityID.Farm]) { return new Farm(); }
         if (id == Entity.EntityIDStrings[(int)EntityID.Depot]) { return new Depot(); }
