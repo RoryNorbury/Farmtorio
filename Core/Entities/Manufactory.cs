@@ -8,8 +8,8 @@ public class Manufactory : Entity, IHasInputSlots, IHasOutputSlots
     public override EntityID ID => EntityID.Manufactory;
     public override bool isDirectional => false;
     public int RecipeTime = 0; // in ticks
-    public List<InventorySlot> InputSlots { get; } = [new InventorySlot(), new InventorySlot()];
-    public List<InventorySlot> OutputSlots { get; } = [new InventorySlot(), new InventorySlot()];
+    public List<InventorySlot> InputSlots { get; } = [new InventorySlot()];
+    public List<InventorySlot> OutputSlots { get; } = [new InventorySlot()];
     public Manufactory() : base() { }
     public Manufactory(Point2D position, int textureIndex) : base(position, OrientationID.North, textureIndex) { }
     public Manufactory(Entity baseEntity) : this(baseEntity.Position, baseEntity.TextureIndex) { }
