@@ -4,3 +4,4 @@ obj/
 .fake
 myeasylog.log
 src/data/saves
+plantuml/
