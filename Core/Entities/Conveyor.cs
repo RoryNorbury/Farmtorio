@@ -7,7 +7,7 @@ public class Conveyor : Entity
 {
     public override EntityID ID => EntityID.Conveyor;
     // speed at which items are moved (tiles per second)
-    public double Speed = 0.5;
+    public double Speed = Globals.DefaultConveyorSpeed;
     // needs to be stored in order
     public List<ConveyorItem> Items = [];
     // entity in front of this one
@@ -39,6 +39,8 @@ public class Conveyor : Entity
     }
     public override void Tick(double dt)
     {
+        // can't be ticked more than once per frame
+        if (Ticked) { return; }
         // mark as ticked
         Ticked = true;
 
@@ -68,6 +70,7 @@ public class Conveyor : Entity
             for (int i = Items.Count - 1; i >= 0; i--)
             {
                 ConveyorItem item = Items[i];
+
                 // if this item is first
                 if (i == Items.Count - 1)
                 {
@@ -76,7 +79,7 @@ public class Conveyor : Entity
                     {
                         ConveyorItem nextItem = nextConveyor.Items[0];
                         double dist = nextItem.Progress - item.Progress + 1; // distance between current and next item
-                        
+
                         // only move if there is space between items
                         if (dist > Globals.ItemSize)
                         {
@@ -99,16 +102,14 @@ public class Conveyor : Entity
                     }
                     else
                     {
-                        if (item.Progress + dp >= 1.0)
+                        // move item
+                        item.Progress += dp;
+                        if (item.Progress >= 1.0)
                         {
                             // move item to next conveyor
-                            item.Progress = 0.0;
+                            item.Progress -= 1.0;
                             nextConveyor.Items.Insert(0, item);
                             Items.RemoveAt(i);
-                        }
-                        else
-                        {
-                            item.Progress += dp;
                         }
                     }
                 }

@@ -24,6 +24,8 @@ public class Manufactory : Entity, IHasInputSlots, IHasOutputSlots
     }
     public override void Tick(double dt)
     {
+        // can't be ticked more than once per frame
+        if (Ticked) { return; }
         Ticked = true;
 
         if (InputSlots[0].Item != ItemID.none || InputSlots[1].Item != ItemID.none)

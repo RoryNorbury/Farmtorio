@@ -25,7 +25,7 @@ public abstract class Entity
     public Point2D Position;
     public OrientationID Orientation;
     public virtual bool isDirectional => true;
-    public int TextureIndex;
+    public int TextureIndex; // not used anymore, delete when you get time
     public bool Ticked = false;
     public abstract EntityID ID { get; }
     public abstract void Tick(double dt);

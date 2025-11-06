@@ -6,7 +6,7 @@ public class Loader : Entity
 {
     public override EntityID ID => EntityID.Loader;
     // speed at which items are moved (tiles per second)
-    public double Speed = 0.5;
+    public double Speed = Globals.DefaultConveyorSpeed;
     // needs to be stored in order
     public List<ConveyorItem> Items = [];
     // entity in front of this one
@@ -39,6 +39,8 @@ public class Loader : Entity
     // this function definitely needs to be split up and modularized
     public override void Tick(double dt)
     {
+        // can't be ticked more than once per frame
+        if (Ticked) { return; }
         Ticked = true;
 
         // if there isn't an entity in front and behind this, do not move any items
@@ -68,6 +70,7 @@ public class Loader : Entity
         for (int i = Items.Count - 1; i >= 0; i--)
         {
             ConveyorItem item = Items[i];
+
             // if this item is first
             if (i == Items.Count - 1)
             {
@@ -119,7 +122,7 @@ public class Loader : Entity
             {
                 foreach (InventorySlot slot in hasInput.InputSlots)
                 {
-                    if (slot.AddItems(1, item.ItemID)) { return true; }
+                    if (slot.AddItems(1, item.ItemID)){ return true; }
                 }
             }
             else
@@ -161,16 +164,16 @@ public class Loader : Entity
             }
             else
             {
-                if (item.Progress + dp >= 2.0)
+                item.Progress += dp;
+                if (item.Progress >= 2.0)
                 {
                     // move item to next conveyor
-                    item.Progress = 0.0;
+                    item.Progress -= 2.0;
                     conveyor.Items.Insert(0, item);
                     return true;
                 }
                 else
                 {
-                    item.Progress += dp;
                     return false;
                 }
             }
@@ -187,7 +190,7 @@ public class Loader : Entity
                 return false;
             }
             // only move item if it is at the end of the conveyor
-            if (conveyor.Items.Count == 0 || conveyor.Items.Last().Progress < 1.0)
+            if (conveyor.Items.Count == 0)
             {
                 return false;
             }
@@ -217,8 +220,9 @@ public class Loader : Entity
                         slot.RemoveItems(1);
                         return true;
                     }
-                    else {
-                        return false; 
+                    else
+                    {
+                        return false;
                     }
                 }
             }

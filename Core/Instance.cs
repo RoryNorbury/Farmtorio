@@ -72,7 +72,7 @@ public class Instance
             previewEntityID = null;
         }
         // rotates the preview entity
-        if (SplashKit.KeyTyped(KeyCode.RKey) && previewEntityID != null)
+        if (SplashKit.KeyTyped(KeyCode.RKey) && previewEntityID != null && EntityFactory.CreateEmptyEntity(previewEntityID.Value).isDirectional)
         {
             previewOrientation = (OrientationID)(((int)previewOrientation + 1) % 4);
         }
@@ -162,20 +162,8 @@ public class Instance
                     List<string> data = reader.ReadLine().Split(',').ToList();
                     string entityID = data[0];
                     data.RemoveAt(0);
-                    // potentially use an enumeration, but this makes the save more readable
-                    // I need a factory
-                    Entity entity;
-                    switch (entityID)
-                    {
-                        // replace with another method to ensure it is consistent with EntityID enum
-                        case "Conveyor": entity = new Conveyor(); break;
-                        case "Loader": entity = new Loader(); break;
-                        case "Splitter": entity = new Splitter(); break;
-                        case "Manufactory": entity = new Manufactory(); break;
-                        case "Farm": entity = new Farm(); break;
-                        case "Depot": entity = new Depot(); break;
-                        default: throw new Exception($"Cannot load entity: Unknown entityID: '{entityID}'");
-                    }
+                    // potentially use an enumeration, but using a string makes the save more readable
+                    Entity entity = EntityFactory.CreateEmptyEntity(entityID);
                     try
                     {
                         entity.LoadFromData(data);
@@ -259,7 +247,7 @@ public class Instance
             Y = Math.Floor(worldPos.Y)
         };
     }
-    public Entity? GetEntityAtPosition(Point2D position)
+    public Entity? GetEntityAtPosition(Point2D worldPosition)
     // TODO: optimize this search
     /*
         Ideas:
@@ -272,7 +260,7 @@ public class Instance
         {
             // compare integer values to avoid floating point errors
             // actually this is the same as flooring both values, idk which i prefer
-            if ((int)entity.Position.X == (int)position.X && (int)entity.Position.Y == (int)position.Y)
+            if ((int)entity.Position.X == (int)worldPosition.X && (int)entity.Position.Y == (int)worldPosition.Y)
             {
                 return entity;
             }
@@ -303,13 +291,13 @@ public class Instance
                 switch (conveyor.Orientation)
                 {
                     case OrientationID.North:
-                        nextPos.Y -= 1;
+                        nextPos.Y += 1;
                         break;
                     case OrientationID.East:
                         nextPos.X += 1;
                         break;
                     case OrientationID.South:
-                        nextPos.Y += 1;
+                        nextPos.Y -= 1;
                         break;
                     case OrientationID.West:
                         nextPos.X -= 1;
@@ -326,16 +314,16 @@ public class Instance
                 switch (loader.Orientation)
                 {
                     case OrientationID.North:
-                        nextPos.Y -= 1;
-                        prevPos.Y += 1;
+                        nextPos.Y += 1;
+                        prevPos.Y -= 1;
                         break;
                     case OrientationID.East:
                         nextPos.X += 1;
                         prevPos.X -= 1;
                         break;
                     case OrientationID.South:
-                        nextPos.Y += 1;
-                        prevPos.Y -= 1;
+                        nextPos.Y -= 1;
+                        prevPos.Y += 1;
                         break;
                     case OrientationID.West:
                         nextPos.X -= 1;

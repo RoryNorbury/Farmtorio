@@ -33,6 +33,8 @@ public class Depot : Entity, IHasInputSlots
     }
     public override void Tick(double dt)
     {
+        // can't be ticked more than once per frame
+        if (Ticked) { return; }
         Ticked = true;
 
         // sell all items in input slots (currently only one)

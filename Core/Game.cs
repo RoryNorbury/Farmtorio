@@ -27,6 +27,7 @@ public sealed class Game
         }
     }
 
+    public static Random Rand = new Random();
     private static Renderer _renderer;
     private static Instance? _instance = null;
     private static MenuID _currentMenu = MenuID.MainMenu;

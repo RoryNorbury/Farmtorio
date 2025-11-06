@@ -28,6 +28,7 @@ public class Renderer
         SplashKit.ClearScreen(Globals.BackgroundColor);
         DrawGrid();
         DrawEntities(instance.DrawableEntities().ToArray());
+        DrawItems(instance.DrawableEntities().ToArray());
         SplashKit.DrawInterface();
         SplashKit.RefreshScreen((uint)Globals.fps);
     }
@@ -67,104 +68,116 @@ public class Renderer
         Point2D drawPos = Instance.WorldToScreenCoords(entity.Position);
         options.Camera = DrawingDest.DrawToScreen;
         SplashKit.DrawBitmap(texture, drawPos.X, drawPos.Y, options);
+    }
+    public void DrawItems(Entity[] entities)
+    {
+        int itemCount = 0;
+        foreach (Entity entity in entities)
+        {
+            Point2D drawPos = Instance.WorldToScreenCoords(entity.Position);
+            DrawingOptions options = SplashKit.OptionToScreen();
 
-        bool drawn = false;
-        // draw any items the entity has
-        // currently draws a circle for every entity with inventory slots, and a square for conveyors, loaders and splitters
-        if (entity is IHasOutputSlots hasOutput)
-        {
-            for (int i = 0; i < hasOutput.OutputSlots.Count; i++)
+            bool drawn = false;
+            // draw any items the entity has
+            // currently draws a circle for every entity with inventory slots, and a square for conveyors, loaders and splitters
+            if (entity is IHasOutputSlots hasOutput)
             {
-                InventorySlot slot = hasOutput.OutputSlots[i];
-                if (slot.Item != ItemID.none && slot.ItemCount > 0)
+                for (int i = 0; i < hasOutput.OutputSlots.Count; i++)
                 {
-                    Point2D itemDrawPos = new Point2D()
+                    InventorySlot slot = hasOutput.OutputSlots[i];
+                    if (slot.Item != ItemID.none && slot.ItemCount > 0)
                     {
-                        X = drawPos.X + 32,
-                        Y = drawPos.Y + 32
-                    };
-                    SplashKit.FillCircle(SplashKit.RGBColor(200, 200, 200), itemDrawPos.X, itemDrawPos.Y, 5, options);
-                    drawn = true;
-                    break; // only draw one circle per entity
+                        Point2D itemDrawPos = new Point2D()
+                        {
+                            X = drawPos.X + 32,
+                            Y = drawPos.Y + 32
+                        };
+                        SplashKit.FillCircle(SplashKit.RGBColor(200, 200, 200), itemDrawPos.X, itemDrawPos.Y, 5, options);
+                        drawn = true;
+                        break; // only draw one circle per entity
+                    }
                 }
             }
-        }
-        if (entity is IHasInputSlots hasInput && !drawn)
-        {
-            for (int i = 0; i < hasInput.InputSlots.Count; i++)
+            if (entity is IHasInputSlots hasInput && !drawn)
             {
-                InventorySlot slot = hasInput.InputSlots[i];
-                if (slot.Item != ItemID.none && slot.ItemCount > 0)
+                for (int i = 0; i < hasInput.InputSlots.Count; i++)
                 {
-                    Point2D itemDrawPos = new Point2D()
+                    InventorySlot slot = hasInput.InputSlots[i];
+                    if (slot.Item != ItemID.none && slot.ItemCount > 0)
                     {
-                        X = drawPos.X + 32,
-                        Y = drawPos.Y + 32
-                    };
-                    SplashKit.FillCircle(SplashKit.RGBColor(200, 200, 200), itemDrawPos.X, itemDrawPos.Y, 5, options);
-                    drawn = true;
-                    break; // only draw one circle per entity
+                        Point2D itemDrawPos = new Point2D()
+                        {
+                            X = drawPos.X + 32,
+                            Y = drawPos.Y + 32
+                        };
+                        SplashKit.FillCircle(SplashKit.RGBColor(200, 200, 200), itemDrawPos.X, itemDrawPos.Y, 5, options);
+                        drawn = true;
+                        break; // only draw one circle per entity
+                    }
                 }
             }
-        }
-        if (entity is Conveyor conveyor)
-        {
-            foreach (ConveyorItem item in conveyor.Items)
+            if (entity is Conveyor conveyor)
             {
-                Point2D itemDrawPos = new Point2D() { X = drawPos.X, Y = drawPos.Y };
-                // should really do this with an array of vectors in the same order as OrientationID
-                switch (entity.Orientation)
+                foreach (ConveyorItem item in conveyor.Items)
                 {
-                    case OrientationID.North:
-                        itemDrawPos.Y -= (0.5 + item.Progress) * Globals.ZoomScale;
-                        itemDrawPos.X += Globals.ZoomScale / 2;
-                        break;
-                    case OrientationID.East:
-                        itemDrawPos.X += (0.5 + item.Progress) * Globals.ZoomScale;
-                        itemDrawPos.Y += Globals.ZoomScale / 2;
-                        break;
-                    case OrientationID.South:
-                        itemDrawPos.Y += (0.5 + item.Progress) * Globals.ZoomScale;
-                        itemDrawPos.X += Globals.ZoomScale / 2;
-                        break;
-                    case OrientationID.West:
-                        itemDrawPos.X -= (0.5 + item.Progress) * Globals.ZoomScale;
-                        itemDrawPos.Y += Globals.ZoomScale / 2;
-                        break;
+                    Point2D itemDrawPos = new Point2D() { X = drawPos.X, Y = drawPos.Y };
+                    // should really do this with an array of vectors in the same order as OrientationID
+                    switch (conveyor.Orientation)
+                    {
+                        case OrientationID.North:
+                            itemDrawPos.Y += Globals.ZoomScale; // I don't know why this is necesarry
+                            itemDrawPos.Y -= (0.5 + item.Progress) * Globals.ZoomScale;
+                            itemDrawPos.X += Globals.ZoomScale / 2;
+                            break;
+                        case OrientationID.East:
+                            itemDrawPos.X += (0.5 + item.Progress) * Globals.ZoomScale;
+                            itemDrawPos.Y += Globals.ZoomScale / 2;
+                            break;
+                        case OrientationID.South:
+                            itemDrawPos.Y += (0.5 + item.Progress) * Globals.ZoomScale;
+                            itemDrawPos.X += Globals.ZoomScale / 2;
+                            break;
+                        case OrientationID.West:
+                            itemDrawPos.X += Globals.ZoomScale; // I don't know why this is necesarry
+                            itemDrawPos.X -= (0.5 + item.Progress) * Globals.ZoomScale;
+                            itemDrawPos.Y += Globals.ZoomScale / 2;
+                            break;
+                    }
+                    SplashKit.FillRectangle(SplashKit.RGBColor(200, 200, 200), itemDrawPos.X - 5, itemDrawPos.Y - 5, 10, 10, options);
                 }
-                SplashKit.FillRectangle(SplashKit.RGBColor(200, 200, 200), itemDrawPos.X - 5, itemDrawPos.Y - 5, 10, 10, options);
             }
-        }
-        if (entity is Loader loader)
-        {
-            foreach (ConveyorItem item in loader.Items)
+            if (entity is Loader loader)
             {
-                Point2D itemDrawPos = new Point2D() { X = drawPos.X, Y = drawPos.Y };
-                // should really do this with an array of vectors in the same order as OrientationID
-                switch (entity.Orientation)
+                foreach (ConveyorItem item in loader.Items)
                 {
-                    case OrientationID.North:
-                        itemDrawPos.Y -= (-0.5 + 2.0 * item.Progress) * Globals.ZoomScale;
-                        itemDrawPos.X += Globals.ZoomScale / 2;
-                        break;
-                    case OrientationID.East:
-                        itemDrawPos.X += (-0.5 + 2.0 * item.Progress) * Globals.ZoomScale;
-                        itemDrawPos.Y += Globals.ZoomScale / 2;
-                        break;
-                    case OrientationID.South:
-                        itemDrawPos.Y += (-0.5 + 2.0 * item.Progress) * Globals.ZoomScale;
-                        itemDrawPos.X += Globals.ZoomScale / 2;
-                        break;
-                    case OrientationID.West:
-                        itemDrawPos.X -= (-0.5 + 2.0 * item.Progress) * Globals.ZoomScale;
-                        itemDrawPos.Y += Globals.ZoomScale / 2;
-                        break;
+                    Point2D itemDrawPos = new Point2D() { X = drawPos.X, Y = drawPos.Y };
+                    // should really do this with an array of vectors in the same order as OrientationID
+                    switch (loader.Orientation)
+                    {
+                        case OrientationID.North:
+                            itemDrawPos.Y += Globals.ZoomScale; // I don't know why this is necesarry
+                            itemDrawPos.Y -= (-0.5 + item.Progress) * Globals.ZoomScale;
+                            itemDrawPos.X += Globals.ZoomScale / 2;
+                            break;
+                        case OrientationID.East:
+                            itemDrawPos.X += (-0.5 + item.Progress) * Globals.ZoomScale;
+                            itemDrawPos.Y += Globals.ZoomScale / 2;
+                            break;
+                        case OrientationID.South:
+                            itemDrawPos.Y += (-0.5 + item.Progress) * Globals.ZoomScale;
+                            itemDrawPos.X += Globals.ZoomScale / 2;
+                            break;
+                        case OrientationID.West:
+                            itemDrawPos.X += Globals.ZoomScale; // I don't know why this is necesarry
+                            itemDrawPos.X -= (-0.5 + item.Progress) * Globals.ZoomScale;
+                            itemDrawPos.Y += Globals.ZoomScale / 2;
+                            break;
+                    }
+                    SplashKit.FillRectangle(SplashKit.RGBColor(200, 200, 200), itemDrawPos.X - 5, itemDrawPos.Y - 5, 10, 10, options);
                 }
-                SplashKit.FillRectangle(SplashKit.RGBColor(200, 200, 200), itemDrawPos.X - 5, itemDrawPos.Y - 5, 10, 10, options);
             }
         }
     }
-
     private void LoadTexturesFromFile()
     {
         try

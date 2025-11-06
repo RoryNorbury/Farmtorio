@@ -12,8 +12,10 @@ public class Farm : Entity, IHasOutputSlots
     public Farm() : base()
     {
         // temporary random crop type assignment
-        Random rand = new Random();
-        CropType = (ItemID)rand.Next(1, Enum.GetValues<ItemID>().Length);
+        CropType = (ItemID)Game.Rand.Next(1, Enum.GetValues<ItemID>().Length);
+
+        // debug
+        GrowthTime = Globals.CropHarvestTime;
     }
     public Farm(ItemID cropType, List<InventorySlot> outputSlots, Point2D position, int textureIndex) : base(position, OrientationID.North, textureIndex)
     {
@@ -49,6 +51,10 @@ public class Farm : Entity, IHasOutputSlots
             if (added)
             {
                 GrowthTime = 0;
+            }
+            else
+            {
+                Console.WriteLine("Farm cannot output item");
             }
         }
     }
