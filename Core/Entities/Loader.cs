@@ -200,15 +200,15 @@ public class Loader : Entity
                 // if there is space for the item -- shouldn't this be checked first??
                 if (Items.Count == 0 || Items[0].Progress > Globals.ItemSize)
                 {
-                    // check each item to see if it is in grab range (only really useful for conveyors not facing the loader)
-                    foreach (ConveyorItem item in conveyor.Items)
+                    // check each item to see if it is in grab range (only really affects conveyors not facing the loader)
+                    for (int i = 0; i < conveyor.Items.Count; i++)
                     {
-                        // only grab items if they are within one itemsize of the center of the conveyor
-                        if (item.Progress <= Globals.ItemSize)
+                        // only grab items if they are within one frame of movement of the pickup point (0.0)
+                        if (conveyor.Items[i].Progress <= dp)
                         {
                             // currently items may not move the full distance when moving into a loader
                             Items.Insert(0, new ConveyorItem(conveyor.Items.Last().ItemID, 0));
-                            conveyor.Items.RemoveAt(conveyor.Items.Count - 1);
+                            conveyor.Items.RemoveAt(i);
                             break;
                         }
                     }
