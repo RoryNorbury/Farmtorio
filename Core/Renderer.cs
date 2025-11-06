@@ -88,16 +88,16 @@ public class Renderer
                     {
                         Point2D itemDrawPos = new Point2D()
                         {
-                            X = drawPos.X + 32,
-                            Y = drawPos.Y + 32
+                            X = drawPos.X + 48,
+                            Y = drawPos.Y + 48
                         };
-                        SplashKit.FillCircle(Globals.ItemPlaceholderColor, itemDrawPos.X, itemDrawPos.Y, 5, options);
+                        SplashKit.FillCircle(ConveyorItem.ItemColours[(int)slot.Item], itemDrawPos.X, itemDrawPos.Y, 5, options);
                         drawn = true;
                         break; // only draw one circle per entity
                     }
                 }
             }
-            if (entity is IHasInputSlots hasInput && !drawn)
+            if (entity is IHasInputSlots hasInput)
             {
                 for (int i = 0; i < hasInput.InputSlots.Count; i++)
                 {
@@ -106,10 +106,10 @@ public class Renderer
                     {
                         Point2D itemDrawPos = new Point2D()
                         {
-                            X = drawPos.X + 32,
-                            Y = drawPos.Y + 32
+                            X = drawPos.X + 16,
+                            Y = drawPos.Y + 48
                         };
-                        SplashKit.FillCircle(Globals.ItemPlaceholderColor, itemDrawPos.X, itemDrawPos.Y, 5, options);
+                        SplashKit.FillCircle(ConveyorItem.ItemColours[(int)slot.Item], itemDrawPos.X, itemDrawPos.Y, 5, options);
                         drawn = true;
                         break; // only draw one circle per entity
                     }
@@ -142,7 +142,7 @@ public class Renderer
                             itemDrawPos.Y += Globals.ZoomScale / 2;
                             break;
                     }
-                    SplashKit.FillRectangle(Globals.ItemPlaceholderColor, itemDrawPos.X - 5, itemDrawPos.Y - 5, 10, 10, options);
+                    SplashKit.FillRectangle(ConveyorItem.ItemColours[(int)item.ItemID], itemDrawPos.X - 5, itemDrawPos.Y - 5, 10, 10, options);
                 }
             }
             if (entity is Loader loader)
@@ -172,7 +172,7 @@ public class Renderer
                             itemDrawPos.Y += Globals.ZoomScale / 2;
                             break;
                     }
-                    SplashKit.FillRectangle(Globals.ItemPlaceholderColor, itemDrawPos.X - 5, itemDrawPos.Y - 5, 10, 10, options);
+                    SplashKit.FillRectangle(ConveyorItem.ItemColours[(int)item.ItemID], itemDrawPos.X - 5, itemDrawPos.Y - 5, 10, 10, options);
                 }
             }
         }
