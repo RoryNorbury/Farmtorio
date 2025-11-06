@@ -40,6 +40,7 @@ public class Conveyor : Entity
     public override void Tick(double dt)
     {
         // can't be ticked more than once per frame
+        // having this at the start also avoids infinite nextEntity loops
         if (Ticked) { return; }
         // mark as ticked
         Ticked = true;
@@ -52,19 +53,12 @@ public class Conveyor : Entity
         }
         // make sure next entity has already been processed (propogates forward)
         // this should be ok to do for any entity type
-        // can cause infinite loops, should add extra "waitingForNextEntity" flag to prevent this (name not final)
         if (!NextEntity.Ticked)
         {
             NextEntity.Tick(dt);
         }
         if (NextEntity is Conveyor)
         {
-            // if next entity is a conveyor not facing the right direction, do not move items
-            // this should actually be changed to handle corners and maybe merges
-            if (Orientation != NextEntity.Orientation)
-            {
-                return;
-            }
             double dp = Speed * dt;
             // iterate in reverse order to ensure smooth flow
             for (int i = Items.Count - 1; i >= 0; i--)
