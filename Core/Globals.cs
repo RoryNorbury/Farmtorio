@@ -32,6 +32,7 @@ public static class Globals
     public static double ZoomScale = 64.0f;
     public static Color BackgroundColor = SplashKit.RGBColor(238, 238, 238);
     public static Color GridColor = SplashKit.RGBColor(200, 200, 200);
+    public static Color ItemPlaceholderColor = SplashKit.RGBColor(120, 120, 120);
     // Gameplay constants
     public static double ItemSize = 0.5; // effectively acts as padding between items (tiles)
     public static int CropHarvestTime = 4 * fps; // in ticks

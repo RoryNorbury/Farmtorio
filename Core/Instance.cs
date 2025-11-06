@@ -85,6 +85,10 @@ public class Instance
             newEntity.Position = entityPos;
             newEntity.Orientation = previewOrientation;
             AddEntity(newEntity); // could check if this succeeds or not, but not currently necessary
+
+            // updates all entities
+            // TODO: make this only update adjacent entities
+            UpdateNextEntities();
         }
         // removes entity at mouse position
         if (SplashKit.MouseDown(MouseButton.RightButton))
@@ -94,6 +98,10 @@ public class Instance
             if (entityToRemove != null)
             {
                 _entities.Remove(entityToRemove);
+                
+                // updates all entities
+                // TODO: make this only update adjacent entities
+                UpdateNextEntities();
             }
         }
     }

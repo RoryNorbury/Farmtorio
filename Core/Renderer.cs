@@ -92,7 +92,7 @@ public class Renderer
                             X = drawPos.X + 32,
                             Y = drawPos.Y + 32
                         };
-                        SplashKit.FillCircle(SplashKit.RGBColor(200, 200, 200), itemDrawPos.X, itemDrawPos.Y, 5, options);
+                        SplashKit.FillCircle(Globals.ItemPlaceholderColor, itemDrawPos.X, itemDrawPos.Y, 5, options);
                         drawn = true;
                         break; // only draw one circle per entity
                     }
@@ -110,7 +110,7 @@ public class Renderer
                             X = drawPos.X + 32,
                             Y = drawPos.Y + 32
                         };
-                        SplashKit.FillCircle(SplashKit.RGBColor(200, 200, 200), itemDrawPos.X, itemDrawPos.Y, 5, options);
+                        SplashKit.FillCircle(Globals.ItemPlaceholderColor, itemDrawPos.X, itemDrawPos.Y, 5, options);
                         drawn = true;
                         break; // only draw one circle per entity
                     }
@@ -143,7 +143,7 @@ public class Renderer
                             itemDrawPos.Y += Globals.ZoomScale / 2;
                             break;
                     }
-                    SplashKit.FillRectangle(SplashKit.RGBColor(200, 200, 200), itemDrawPos.X - 5, itemDrawPos.Y - 5, 10, 10, options);
+                    SplashKit.FillRectangle(Globals.ItemPlaceholderColor, itemDrawPos.X - 5, itemDrawPos.Y - 5, 10, 10, options);
                 }
             }
             if (entity is Loader loader)
@@ -173,7 +173,7 @@ public class Renderer
                             itemDrawPos.Y += Globals.ZoomScale / 2;
                             break;
                     }
-                    SplashKit.FillRectangle(SplashKit.RGBColor(200, 200, 200), itemDrawPos.X - 5, itemDrawPos.Y - 5, 10, 10, options);
+                    SplashKit.FillRectangle(Globals.ItemPlaceholderColor, itemDrawPos.X - 5, itemDrawPos.Y - 5, 10, 10, options);
                 }
             }
         }
