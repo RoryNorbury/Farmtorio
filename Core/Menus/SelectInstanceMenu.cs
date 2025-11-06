@@ -7,9 +7,9 @@ public class SelectInstanceMenu : Menu
     {
         BackgroundColour = SplashKit.RGBColor(238, 238, 238);
     }
-    public override int ID
+    public override MenuID ID
     {
-        get { return (int)MenuID.SelectInstanceMenu; }
+        get { return MenuID.SelectInstanceMenu; }
     }
     public override void Draw()
     {

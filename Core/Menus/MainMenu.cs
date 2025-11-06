@@ -6,9 +6,9 @@ public class MainMenu : Menu
     {
         BackgroundColour = SplashKit.RGBColor(238, 238, 238);
     }
-    public override int ID
+    public override MenuID ID
     {
-        get { return (int)MenuID.MainMenu; }
+        get { return MenuID.MainMenu; }
     }
     public override void Draw()
     {

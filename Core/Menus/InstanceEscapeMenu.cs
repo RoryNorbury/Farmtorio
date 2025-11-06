@@ -7,9 +7,9 @@ public class InstanceEscapeMenu : Menu
     {
         BackgroundColour = SplashKit.RGBAColor(238, 238, 238, 64);
     }
-    public override int ID
+    public override MenuID ID
     {
-        get { return (int)MenuID.InstanceEscapeMenu; }
+        get { return MenuID.InstanceEscapeMenu; }
     }
     public override void Draw()
     {
