@@ -71,7 +71,6 @@ public class Renderer
     }
     public void DrawItems(Entity[] entities)
     {
-        int itemCount = 0;
         foreach (Entity entity in entities)
         {
             Point2D drawPos = Instance.WorldToScreenCoords(entity.Position);
