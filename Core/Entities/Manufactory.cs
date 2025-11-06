@@ -28,7 +28,13 @@ public class Manufactory : Entity, IHasInputSlots, IHasOutputSlots
         if (Ticked) { return; }
         Ticked = true;
 
-        if (InputSlots[0].Item != ItemID.none || InputSlots[1].Item != ItemID.none)
+        // make sure input slots aren't empty
+        bool isEmpty = true;
+        foreach (InventorySlot slot in InputSlots)
+        {
+            if (slot.ItemCount > 0) { isEmpty = false; }
+        }
+        if (!isEmpty)
         {
             RecipeTime++;
             if (RecipeTime >= Globals.RecipeTime)
@@ -38,22 +44,23 @@ public class Manufactory : Entity, IHasInputSlots, IHasOutputSlots
                 for (int i = 0; i < InputSlots.Count; i++)
                 {
                     ItemID inputItem = InputSlots[i].Item;
-                    int inputCount = InputSlots[i].ItemCount;
-                    if (inputItem != ItemID.none && inputCount > 0)
+                    // if slot isn't empty, proceed
+                    if (inputItem != ItemID.none && InputSlots[i].ItemCount > 0)
                     {
                         // try to add to output slots
                         bool added = false;
                         for (int j = 0; j < OutputSlots.Count; j++)
                         {
-                            if (OutputSlots[j].AddItems(inputCount, inputItem))
+                            if (OutputSlots[j].AddItems(1, inputItem))
                             {
                                 added = true;
+                                InputSlots[i].RemoveItems(1);
                                 break;
                             }
                         }
                         if (added)
                         {
-                            InputSlots[i].RemoveItems(inputCount);
+                            break;
                         }
                     }
                 }
@@ -64,5 +71,19 @@ public class Manufactory : Entity, IHasInputSlots, IHasOutputSlots
         {
             RecipeTime = 0;
         }
+    }
+    public string DumpData()
+    {
+        string output = "";
+        for (int i = 0; i < InputSlots.Count; i++)
+        {
+            output += $"Input slot {i}: {InputSlots[i].ItemCount} {InputSlots[i].Item}s\n";
+        }
+        for (int i = 0; i < InputSlots.Count; i++)
+        {
+            output += $"Output slot {i}: {InputSlots[i].ItemCount} {InputSlots[i].Item}s\n";
+        }
+        output += $"Recipe time: {RecipeTime.ToString("f2")} / {Globals.RecipeTime.ToString("f2")}\n";
+        return output;
     }
 }
