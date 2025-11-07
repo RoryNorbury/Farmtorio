@@ -19,7 +19,7 @@ public class InstanceEscapeMenu : Menu
         // will return to main menu if escape key pressed
         if (SplashKit.KeyTyped(KeyCode.EscapeKey))
         {
-            Game.NextMenuID = MenuID.Instance;
+            Game.GameInstance.NextMenuID = MenuID.Instance;
         }
 
         Point windowSize = new Point(Globals.WindowWidth, Globals.WindowHeight);
@@ -27,23 +27,23 @@ public class InstanceEscapeMenu : Menu
         int button = 0;
         if (SplashKit.Button("Return to Game", Helpers.getMenuButtonRectangle(windowSize, numButtons, button, Globals.StandardElementWidth, Globals.StandardElementHeight, Globals.StandardElementPadding)))
         {
-            Game.NextMenuID = MenuID.Instance;
+            Game.GameInstance.NextMenuID = MenuID.Instance;
         }
         button++;
         if (SplashKit.Button("Save Game", Helpers.getMenuButtonRectangle(windowSize, numButtons, button, Globals.StandardElementWidth, Globals.StandardElementHeight, Globals.StandardElementPadding)))
         {
-            Game.NextMenuID = MenuID.SaveInstanceMenu;
+            Game.GameInstance.NextMenuID = MenuID.SaveInstanceMenu;
         }
         button++;
         if (SplashKit.Button("Load Game", Helpers.getMenuButtonRectangle(windowSize, numButtons, button, Globals.StandardElementWidth, Globals.StandardElementHeight, Globals.StandardElementPadding)))
         {
-            Game.NextMenuID = MenuID.SelectInstanceMenu;
+            Game.GameInstance.NextMenuID = MenuID.SelectInstanceMenu;
             Game.GameInstance.UnloadInstance();
         }
         button++;
         if (SplashKit.Button("Return to menu", Helpers.getMenuButtonRectangle(windowSize, numButtons, button, Globals.StandardElementWidth, Globals.StandardElementHeight, Globals.StandardElementPadding)))
         {
-            Game.NextMenuID = MenuID.MainMenu;
+            Game.GameInstance.NextMenuID = MenuID.MainMenu;
             Game.GameInstance.UnloadInstance();
         }
         button++;

@@ -12,7 +12,7 @@ public class Farm : Entity, IHasOutputSlots
     public Farm() : base()
     {
         // temporary random crop type assignment
-        CropType = (ItemID)Game.Rand.Next(1, Enum.GetValues<ItemID>().Length);
+        CropType = (ItemID)Game.GameInstance.Rand.Next(1, Enum.GetValues<ItemID>().Length);
 
         // debug
         GrowthTime = Globals.CropHarvestTime;

@@ -10,7 +10,7 @@ public enum ItemID
     barley,
     rice
 }
-// make singleton
+
 public sealed class Game
 {
     // singleton stuff
@@ -27,12 +27,12 @@ public sealed class Game
         }
     }
 
-    public static Random Rand = new Random();
-    private static Renderer _renderer;
-    private static Instance? _instance = null;
-    private static MenuID _currentMenu = MenuID.MainMenu;
-    public static MenuID NextMenuID = MenuID.MainMenu; // can this be done just using currentmenu?
-    private static Menu[] _menus =
+    public Random Rand = new Random();
+    private Renderer _renderer;
+    private Instance? _instance = null;
+    private MenuID _currentMenu = MenuID.MainMenu;
+    public MenuID NextMenuID = MenuID.MainMenu; // can this be done just using currentmenu?
+    private Menu[] _menus =
     [
         new MainMenu(),
         new SelectInstanceMenu(),
@@ -87,19 +87,19 @@ public sealed class Game
     }
     public static void NewInstance()
     {
-        _instance = new Instance();
+        GameInstance._instance = new Instance();
     }
     public static void LoadInstance(string filepath)
     {
         try
         {
-            if (_instance == null)
+            if (GameInstance._instance == null)
             {
-                _instance = new Instance(filepath);
+                GameInstance._instance = new Instance(filepath);
             }
             else
             {
-                _instance.LoadFromFile(filepath);
+                GameInstance._instance.LoadFromFile(filepath);
             }
         }
         catch (Exception e)

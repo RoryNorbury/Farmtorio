@@ -20,7 +20,7 @@ public class SelectInstanceMenu : Menu
         // will return to main menu if escape key pressed
         if (SplashKit.KeyDown(KeyCode.EscapeKey))
         {
-            Game.NextMenuID = MenuID.MainMenu;
+            Game.GameInstance.NextMenuID = MenuID.MainMenu;
         }
 
         int numButtons = 2;
@@ -49,14 +49,14 @@ public class SelectInstanceMenu : Menu
                 try
                 {
                     Game.LoadInstance(instanceNames[i]);
-                    Game.NextMenuID = MenuID.Instance;
+                    Game.GameInstance.NextMenuID = MenuID.Instance;
                     Console.WriteLine("Loaded instance: " + instanceNames[i]);
                     break;
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine("Error loading instance: " + e.Message);
-                    Game.NextMenuID = MenuID.SelectInstanceMenu;
+                    Game.GameInstance.NextMenuID = MenuID.SelectInstanceMenu;
                 }
             }
         }
@@ -67,7 +67,7 @@ public class SelectInstanceMenu : Menu
         elementRect.Height = Globals.StandardElementHeight;
         if (SplashKit.Button("Go back", elementRect))
         {
-            Game.NextMenuID = MenuID.MainMenu;
+            Game.GameInstance.NextMenuID = MenuID.MainMenu;
         }
     }
 }

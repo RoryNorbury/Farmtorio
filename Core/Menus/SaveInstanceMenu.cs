@@ -23,7 +23,7 @@ public class SaveInstanceMenu : Menu
         int button = 0;
         if (SplashKit.Button("Go back", Helpers.getMenuButtonRectangle(windowSize, numButtons, button, Globals.StandardElementWidth, Globals.StandardElementHeight, Globals.StandardElementPadding)))
         {
-            Game.NextMenuID = MenuID.InstanceEscapeMenu;
+            Game.GameInstance.NextMenuID = MenuID.InstanceEscapeMenu;
             userEntry = null;
         }
 
@@ -51,7 +51,7 @@ public class SaveInstanceMenu : Menu
             {
                 Game.GameInstance.SaveInstance(Globals.SavesDirectory + userEntry + ".txt");
                 Game.GameInstance.InstanceName = userEntry;
-                Game.NextMenuID = MenuID.Instance;
+                Game.GameInstance.NextMenuID = MenuID.Instance;
                 userEntry = null;
             }
             catch (Exception e)

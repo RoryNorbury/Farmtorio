@@ -22,12 +22,12 @@ public class MainMenu : Menu
         if (SplashKit.Button("New Game", Helpers.getMenuButtonRectangle(windowSize, numButtons, button, Globals.StandardElementWidth, Globals.StandardElementHeight, Globals.StandardElementPadding)))
         {
             Game.NewInstance();
-            Game.NextMenuID = MenuID.Instance;
+            Game.GameInstance.NextMenuID = MenuID.Instance;
         }
         button++;
         if (SplashKit.Button("Load Game", Helpers.getMenuButtonRectangle(windowSize, numButtons, button, Globals.StandardElementWidth, Globals.StandardElementHeight, Globals.StandardElementPadding)))
         {
-            Game.NextMenuID = MenuID.SelectInstanceMenu;
+            Game.GameInstance.NextMenuID = MenuID.SelectInstanceMenu;
         }
         button++;
         if (SplashKit.Button("Quit", Helpers.getMenuButtonRectangle(windowSize, numButtons, button, Globals.StandardElementWidth, Globals.StandardElementHeight, Globals.StandardElementPadding)))

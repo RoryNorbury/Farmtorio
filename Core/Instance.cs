@@ -2,6 +2,7 @@ namespace Core;
 
 using SplashKitSDK;
 
+// TODO: rename this class, instance should be the singleton instatiation of Game class
 public class Instance
 {
     // TODO: make camera class
@@ -37,7 +38,7 @@ public class Instance
         // will open escape menu if escape key pressed
         if (SplashKit.KeyTyped(KeyCode.EscapeKey))
         {
-            Game.NextMenuID = MenuID.InstanceEscapeMenu;
+            Game.GameInstance.NextMenuID = MenuID.InstanceEscapeMenu;
             // also reset preview entity
             previewEntityID = null;
         }
@@ -98,7 +99,7 @@ public class Instance
             if (entityToRemove != null)
             {
                 _entities.Remove(entityToRemove);
-                
+
                 // updates all entities
                 // TODO: make this only update adjacent entities
                 UpdateNextEntities();
