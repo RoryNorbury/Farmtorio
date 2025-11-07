@@ -7,7 +7,7 @@ public class SaveInstanceMenu : Menu
     {
         BackgroundColour = SplashKit.RGBColor(238, 238, 238);
     }
-    private string userEntry = null;
+    private string? userEntry = null;
     public override MenuID ID
     {
         get { return MenuID.SaveInstanceMenu; }
