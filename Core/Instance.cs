@@ -2,7 +2,7 @@ namespace Core;
 
 using SplashKitSDK;
 
-// TODO: rename this class, instance should be the singleton instatiation of Game class
+// TODO: rename this class, instance should be the singleton instantiation of Game class
 public class Instance
 {
     // TODO: make camera class
