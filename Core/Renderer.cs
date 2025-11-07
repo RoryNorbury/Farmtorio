@@ -76,7 +76,6 @@ public class Renderer
             Point2D drawPos = Instance.WorldToScreenCoords(entity.Position);
             DrawingOptions options = SplashKit.OptionToScreen();
 
-            bool drawn = false;
             // draw any items the entity has
             // currently draws a circle for every entity with inventory slots, and a square for conveyors, loaders and Routers
             if (entity is IHasOutputSlots hasOutput)
@@ -92,7 +91,6 @@ public class Renderer
                             Y = drawPos.Y + 48
                         };
                         SplashKit.FillCircle(ConveyorItem.ItemColours[(int)slot.Item], itemDrawPos.X, itemDrawPos.Y, 5, options);
-                        drawn = true;
                         break; // only draw one circle per entity
                     }
                 }
@@ -110,7 +108,6 @@ public class Renderer
                             Y = drawPos.Y + 48
                         };
                         SplashKit.FillCircle(ConveyorItem.ItemColours[(int)slot.Item], itemDrawPos.X, itemDrawPos.Y, 5, options);
-                        drawn = true;
                         break; // only draw one circle per entity
                     }
                 }
