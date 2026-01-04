@@ -74,7 +74,7 @@ public class Renderer
         foreach (Entity entity in entities)
         {
             Point2D drawPos = Instance.WorldToScreenCoords(entity.Position);
-            DrawingOptions options = SplashKit.OptionToScreen();
+            DrawingOptions drawOptions = SplashKit.OptionToScreen();
 
             // draw any items the entity has
             // currently draws a circle for every entity with inventory slots, and a square for conveyors, loaders and Routers
@@ -90,7 +90,7 @@ public class Renderer
                             X = drawPos.X + 48,
                             Y = drawPos.Y + 48
                         };
-                        SplashKit.FillCircle(ConveyorItem.GetItemColour(slot.Item), itemDrawPos.X, itemDrawPos.Y, 5, options);
+                        SplashKit.FillCircle(ConveyorItem.GetItemColour(slot.Item), itemDrawPos.X, itemDrawPos.Y, 5, drawOptions);
                         break; // only draw one circle per entity
                     }
                 }
@@ -107,7 +107,7 @@ public class Renderer
                             X = drawPos.X + 16,
                             Y = drawPos.Y + 48
                         };
-                        SplashKit.FillCircle(ConveyorItem.GetItemColour(slot.Item), itemDrawPos.X, itemDrawPos.Y, 5, options);
+                        SplashKit.FillCircle(ConveyorItem.GetItemColour(slot.Item), itemDrawPos.X, itemDrawPos.Y, 5, drawOptions);
                         break; // only draw one circle per entity
                     }
                 }
@@ -139,7 +139,7 @@ public class Renderer
                             itemDrawPos.Y += Globals.ZoomScale / 2;
                             break;
                     }
-                    SplashKit.FillRectangle(ConveyorItem.GetItemColour(item.ItemID), itemDrawPos.X - 5, itemDrawPos.Y - 5, 10, 10, options);
+                    DrawConveyorItem(itemDrawPos, item, drawOptions);
                 }
             }
             if (entity is Loader loader)
@@ -169,7 +169,7 @@ public class Renderer
                             itemDrawPos.Y += Globals.ZoomScale / 2;
                             break;
                     }
-                    SplashKit.FillRectangle(ConveyorItem.GetItemColour(item.ItemID), itemDrawPos.X - 5, itemDrawPos.Y - 5, 10, 10, options);
+                    DrawConveyorItem(itemDrawPos, item, drawOptions);
                 }
             }
         }
@@ -195,6 +195,11 @@ public class Renderer
         {
             throw new Exception("Error loading textures: " + e.Message);
         }
+    }
+    private void DrawConveyorItem(Point2D position, ConveyorItem item, DrawingOptions drawingOptions)
+    {
+        Bitmap bmp = SplashKit.BitmapNamed(ConveyorItem.GetItemName(item.ItemID));
+        SplashKit.DrawBitmap(bmp, position.X - bmp.Width / 2, position.Y - bmp.Height / 2, drawingOptions);
     }
     private void DrawGrid()
     {
