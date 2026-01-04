@@ -90,7 +90,7 @@ public class Renderer
                             X = drawPos.X + 48,
                             Y = drawPos.Y + 48
                         };
-                        SplashKit.FillCircle(ConveyorItem.ItemColours[(int)slot.Item], itemDrawPos.X, itemDrawPos.Y, 5, options);
+                        SplashKit.FillCircle(ConveyorItem.GetItemColour(slot.Item), itemDrawPos.X, itemDrawPos.Y, 5, options);
                         break; // only draw one circle per entity
                     }
                 }
@@ -107,7 +107,7 @@ public class Renderer
                             X = drawPos.X + 16,
                             Y = drawPos.Y + 48
                         };
-                        SplashKit.FillCircle(ConveyorItem.ItemColours[(int)slot.Item], itemDrawPos.X, itemDrawPos.Y, 5, options);
+                        SplashKit.FillCircle(ConveyorItem.GetItemColour(slot.Item), itemDrawPos.X, itemDrawPos.Y, 5, options);
                         break; // only draw one circle per entity
                     }
                 }
@@ -139,7 +139,7 @@ public class Renderer
                             itemDrawPos.Y += Globals.ZoomScale / 2;
                             break;
                     }
-                    SplashKit.FillRectangle(ConveyorItem.ItemColours[(int)item.ItemID], itemDrawPos.X - 5, itemDrawPos.Y - 5, 10, 10, options);
+                    SplashKit.FillRectangle(ConveyorItem.GetItemColour(item.ItemID), itemDrawPos.X - 5, itemDrawPos.Y - 5, 10, 10, options);
                 }
             }
             if (entity is Loader loader)
@@ -169,7 +169,7 @@ public class Renderer
                             itemDrawPos.Y += Globals.ZoomScale / 2;
                             break;
                     }
-                    SplashKit.FillRectangle(ConveyorItem.ItemColours[(int)item.ItemID], itemDrawPos.X - 5, itemDrawPos.Y - 5, 10, 10, options);
+                    SplashKit.FillRectangle(ConveyorItem.GetItemColour(item.ItemID), itemDrawPos.X - 5, itemDrawPos.Y - 5, 10, 10, options);
                 }
             }
         }
@@ -178,10 +178,17 @@ public class Renderer
     {
         try
         {
+            // Entity Textures
             _textures = new List<Bitmap>();
             for (int i = 0; i < Entity.EntityIDStrings.Length; i++)
             {
                 _textures.Add(SplashKit.LoadBitmap(Entity.EntityIDStrings[i], Entity.EntityIDStrings[i] + ".png"));
+            }
+
+            // Item textures
+            foreach (ItemID item in Enum.GetValues<ItemID>())
+            {
+                SplashKit.LoadBitmap(ConveyorItem.GetItemName(item), ConveyorItem.GetItemName(item) + ".png");
             }
         }
         catch (Exception e)
