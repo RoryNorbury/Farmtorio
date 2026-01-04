@@ -57,7 +57,7 @@ public class Conveyor : Entity
         {
             NextEntity.Tick(dt);
         }
-        if (NextEntity is Conveyor)
+        if (NextEntity is Conveyor nextConveyor)
         {
             double dp = Speed * dt;
             // iterate in reverse order to ensure smooth flow
@@ -68,7 +68,6 @@ public class Conveyor : Entity
                 // if this item is first
                 if (i == Items.Count - 1)
                 {
-                    Conveyor nextConveyor = NextEntity as Conveyor;
                     if (nextConveyor.Items.Count > 0)
                     {
                         ConveyorItem nextItem = nextConveyor.Items[0];
