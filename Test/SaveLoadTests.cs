@@ -19,7 +19,7 @@ public class SaveLoadTests
     [Test]
     public void SaveTest()
     {
-        string filename = coreDirectory + "\\src\\data\\saves\\test.txt";
+        string filename = coreDirectory + "\\userdata\\saves\\test.txt";
         instance.SaveToFile(filename);
 
         Assert.That(File.Exists(filename), Is.True);
@@ -37,7 +37,7 @@ public class SaveLoadTests
     [Test]
     public void LoadTest()
     {
-        string filename = coreDirectory + "\\src\\data\\saves\\test.txt";
+        string filename = coreDirectory + "\\userdata\\saves\\test.txt";
         instance.SaveToFile(filename);
 
         Instance loadedInstance = new Instance(filename);
