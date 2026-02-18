@@ -3,5 +3,5 @@ obj/
 .vscode/
 .fake
 myeasylog.log
-src/data/saves
+userdata/saves
 plantuml/
