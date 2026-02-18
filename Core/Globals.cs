@@ -5,9 +5,7 @@ namespace Core;
 public static class Globals
 {
     // Paths
-    public static string SourceDirectory = "..\\src\\";
-    public static string TexturesDirectory = SourceDirectory + "\\Textures\\";
-    public static string SavesDirectory = SourceDirectory + "\\data\\saves\\";
+    public static string SavesDirectory = "..\\userdata\\saves\\";
 
     // BASIS FOR ALL OTHER SIZE VALUES
     public static int WindowWidth = 1280;

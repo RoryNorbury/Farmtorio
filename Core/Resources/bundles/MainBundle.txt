@@ -1,0 +1,10 @@
+BITMAP,Conveyor,Conveyor.png
+BITMAP,Loader,Loader.png
+BITMAP,Router,Router.png
+BITMAP,Farm,Farm.png
+BITMAP,Manufactory,Manufactory.png
+BITMAP,Depot,Depot.png
+BITMAP,Carrot,Carrot.png
+BITMAP,Potato,Potato.png
+BITMAP,Barley,Barley.png
+BITMAP,Rice,Rice.png

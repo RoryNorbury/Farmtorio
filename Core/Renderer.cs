@@ -178,6 +178,8 @@ public class Renderer
     {
         try
         {
+            SplashKit.LoadResourceBundle("resources", "resources.txt");
+
             // Entity Textures
             _textures = new List<Bitmap>();
             for (int i = 0; i < Entity.EntityIDStrings.Length; i++)
