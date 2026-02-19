@@ -112,61 +112,28 @@ public class Renderer
                     }
                 }
             }
-            if (entity is Conveyor conveyor)
+            if (entity is ItemMover itemMover)
             {
-                foreach (ConveyorItem item in conveyor.Items)
+                foreach (ConveyorItem item in itemMover.Items)
                 {
-                    Point2D itemDrawPos = new Point2D() { X = drawPos.X, Y = drawPos.Y };
+                    Point2D itemDrawPos = new Point2D() {
+                        X = drawPos.X + Globals.ZoomScale / 2,
+                        Y = drawPos.Y + Globals.ZoomScale / 2
+                        };
                     // should really do this with an array of vectors in the same order as OrientationID
-                    switch (conveyor.Orientation)
+                    switch (itemMover.Orientation)
                     {
                         case OrientationID.North:
-                            itemDrawPos.Y += Globals.ZoomScale; // I don't know why this is necesarry
-                            itemDrawPos.Y -= (0.5 + item.Progress) * Globals.ZoomScale;
-                            itemDrawPos.X += Globals.ZoomScale / 2;
+                            itemDrawPos.Y -= item.Progress * Globals.ZoomScale;
                             break;
                         case OrientationID.East:
-                            itemDrawPos.X += (0.5 + item.Progress) * Globals.ZoomScale;
-                            itemDrawPos.Y += Globals.ZoomScale / 2;
+                            itemDrawPos.X += item.Progress * Globals.ZoomScale;
                             break;
                         case OrientationID.South:
-                            itemDrawPos.Y += (0.5 + item.Progress) * Globals.ZoomScale;
-                            itemDrawPos.X += Globals.ZoomScale / 2;
+                            itemDrawPos.Y += item.Progress * Globals.ZoomScale;
                             break;
                         case OrientationID.West:
-                            itemDrawPos.X += Globals.ZoomScale; // I don't know why this is necesarry
-                            itemDrawPos.X -= (0.5 + item.Progress) * Globals.ZoomScale;
-                            itemDrawPos.Y += Globals.ZoomScale / 2;
-                            break;
-                    }
-                    DrawConveyorItem(itemDrawPos, item, drawOptions);
-                }
-            }
-            if (entity is Loader loader)
-            {
-                foreach (ConveyorItem item in loader.Items)
-                {
-                    Point2D itemDrawPos = new Point2D() { X = drawPos.X, Y = drawPos.Y };
-                    // should really do this with an array of vectors in the same order as OrientationID
-                    switch (loader.Orientation)
-                    {
-                        case OrientationID.North:
-                            itemDrawPos.Y += Globals.ZoomScale; // I don't know why this is necesarry
-                            itemDrawPos.Y -= (-0.5 + item.Progress) * Globals.ZoomScale;
-                            itemDrawPos.X += Globals.ZoomScale / 2;
-                            break;
-                        case OrientationID.East:
-                            itemDrawPos.X += (-0.5 + item.Progress) * Globals.ZoomScale;
-                            itemDrawPos.Y += Globals.ZoomScale / 2;
-                            break;
-                        case OrientationID.South:
-                            itemDrawPos.Y += (-0.5 + item.Progress) * Globals.ZoomScale;
-                            itemDrawPos.X += Globals.ZoomScale / 2;
-                            break;
-                        case OrientationID.West:
-                            itemDrawPos.X += Globals.ZoomScale; // I don't know why this is necesarry
-                            itemDrawPos.X -= (-0.5 + item.Progress) * Globals.ZoomScale;
-                            itemDrawPos.Y += Globals.ZoomScale / 2;
+                            itemDrawPos.X -= item.Progress * Globals.ZoomScale;
                             break;
                     }
                     DrawConveyorItem(itemDrawPos, item, drawOptions);
