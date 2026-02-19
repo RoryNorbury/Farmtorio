@@ -32,29 +32,59 @@ public abstract class ItemMover : Entity
             }
         }
     }
-    public void MoveItemFromConveyor(Conveyor previousEntity, double dt)
+    protected void MoveItemToNextEntity(int itemIndex, Entity nextEntity, double dt)
+    {
+        if (nextEntity is Conveyor nextConveyor)
+        {
+            MoveItemToConveyor(itemIndex, nextConveyor, dt);
+        }
+        else if (nextEntity is IHasInputSlots nextHasInputSlots)
+        {
+            MoveItemToInputSlot(itemIndex, nextHasInputSlots, dt);
+        }
+        else
+        {
+            throw new Exception($"Error moving item: entity in front of ItemMover is of type {nextEntity.GetType().Name}, which is not a valid type to move to");
+        }
+    }
+    protected void MoveItemFromPreviousEntity(Entity previousEntity, double dt)
+    {
+        if (previousEntity is Conveyor previousConveyor)
+        {
+            MoveItemFromConveyor(previousConveyor, dt);
+        }
+        else if (previousEntity is IHasOutputSlots previousHasOutputSlots)
+        {
+            MoveItemFromOutputSlot(previousHasOutputSlots, dt);
+        }
+        else
+        {
+            throw new Exception($"Error moving item: entity behind ItemMover is of type {previousEntity.GetType().Name}, which is not a valid type to move from");
+        }
+    }
+    protected void MoveItemFromConveyor(Conveyor previousConveyor, double dt)
     {
         double dp = Speed * dt;
-        if (previousEntity.Items.Count > 0)
+        if (previousConveyor.Items.Count > 0)
         {
-            if (Items.Count == 0 || Items[0].Progress > Globals.ItemSize)
+            if (Items.Count == 0 || (Items[0].Progress - InputPosition) > Globals.ItemSize)
             {
                 // check each item to see if it is in grab range (only really affects conveyors not facing the loader)
-                for (int i = 0; i < previousEntity.Items.Count; i++)
+                for (int i = 0; i < previousConveyor.Items.Count; i++)
                 {
                     // only grab items if they are within one frame of movement of the pickup point (0.0)
-                    if (previousEntity.Items[i].Progress <= dp)
+                    if (previousConveyor.Items[i].Progress <= dp)
                     {
                         // currently items do not move when moving into a loader
-                        Items.Insert(0, new ConveyorItem(previousEntity.Items[i].ItemID, 0));
-                        previousEntity.Items.RemoveAt(i);
+                        Items.Insert(0, new ConveyorItem(previousConveyor.Items[i].ItemID, InputPosition));
+                        previousConveyor.Items.RemoveAt(i);
                         break;
                     }
                 }
             }
         }
     }
-    public void MoveItemToConveyor(int itemIndex, Conveyor nextConveyor, double dt)
+    protected void MoveItemToConveyor(int itemIndex, Conveyor nextConveyor, double dt)
     {
         double dp = Speed * dt;
         ConveyorItem item = Items[itemIndex];
@@ -76,8 +106,8 @@ public abstract class ItemMover : Entity
             if (nextConveyor.Items.Count > 0)
             {
                 ConveyorItem nextItem = nextConveyor.Items[0];
-                //                                               size of this entity's control area
-                double dist = nextItem.Progress - item.Progress + (OutputPosition - InputPosition); // distance between current and next item
+                // distance between current and next item
+                double dist = nextItem.Progress - nextConveyor.InputPosition + OutputPosition - item.Progress;
 
                 // only move if there is space between items
                 if (dist > Globals.ItemSize)
@@ -87,14 +117,11 @@ public abstract class ItemMover : Entity
                     {
                         item.Progress += dp - (dist - Globals.ItemSize);
                     }
-                    else
-                    {
-                        item.Progress += dp;
-                    }
+                    else { item.Progress += dp; }
                     if (item.Progress >= OutputPosition)
                     {
                         // move item to next conveyor
-                        item.Progress -= (OutputPosition - InputPosition);
+                        item.Progress = item.Progress - OutputPosition + nextConveyor.InputPosition;
                         nextConveyor.Items.Insert(0, item);
                         Items.RemoveAt(itemIndex);
                     }
@@ -106,31 +133,31 @@ public abstract class ItemMover : Entity
                 if (item.Progress >= OutputPosition)
                 {
                     // move item to next conveyor
-                    item.Progress -= (OutputPosition - InputPosition);
+                    item.Progress = item.Progress - OutputPosition + nextConveyor.InputPosition;
                     nextConveyor.Items.Insert(0, item);
                     Items.RemoveAt(itemIndex);
                 }
             }
         }
     }
-    public void MoveItemFromOutputSlot(IHasOutputSlots previousEntity, double dt)
+    protected void MoveItemFromOutputSlot(IHasOutputSlots previousHasOutput, double dt)
     {
         double dp = Speed * dt;
-        foreach (InventorySlot slot in previousEntity.OutputSlots)
+        foreach (InventorySlot slot in previousHasOutput.OutputSlots)
         {
             if (slot.ItemCount > 0)
             {
                 // if there is space for the item
-                if (Items.Count == 0 || Items[0].Progress > Globals.ItemSize)
+                if (Items.Count == 0 || (Items[0].Progress - InputPosition) > Globals.ItemSize)
                 {
                     // currently items do not move when moving into a loader
-                    Items.Insert(0, new ConveyorItem(slot.Item, 0));
+                    Items.Insert(0, new ConveyorItem(slot.Item, InputPosition));
                     slot.RemoveItems(1);
                 }
             }
         }
     }
-    public void MoveItemToInputSlot(int itemIndex, IHasInputSlots nextEntity, double dt)
+    protected void MoveItemToInputSlot(int itemIndex, IHasInputSlots nextHasInput, double dt)
     {
         double dp = Speed * dt;
         ConveyorItem item = Items[itemIndex];
@@ -146,10 +173,10 @@ public abstract class ItemMover : Entity
         }
         else
         {
-            item.Progress = Math.Min(item.Progress + dp, (OutputPosition - InputPosition));
-            if (item.Progress >= (OutputPosition - InputPosition))
+            item.Progress = Math.Min(item.Progress + dp, OutputPosition);
+            if (item.Progress >= OutputPosition)
             {
-                foreach (InventorySlot slot in nextEntity.InputSlots)
+                foreach (InventorySlot slot in nextHasInput.InputSlots)
                 {
                     if (slot.AddItems(1, item.ItemID))
                     {
