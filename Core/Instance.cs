@@ -14,6 +14,7 @@ public class Instance
     public string Name { get => _name; set => _name = value; }
     private int _cycle = 0;
     public int Cycle { get => _cycle; }
+    private bool _paused = false;
     public bool ShouldExit = false;
     private EntityID? previewEntityID = null;
     private OrientationID previewOrientation = OrientationID.East;
@@ -29,8 +30,11 @@ public class Instance
     public void Tick(double dt)
     {
         _cycle++;
-        UntickEntities();
-        TickEntities(dt);
+        if (!_paused)
+        {
+            UntickEntities();
+            TickEntities(dt);
+        }
         HandleInput();
     }
     private void HandleInput()
@@ -41,6 +45,10 @@ public class Instance
             Game.GameInstance.NextMenuID = MenuID.InstanceEscapeMenu;
             // also reset preview entity
             previewEntityID = null;
+        }
+        if (SplashKit.KeyTyped(KeyCode.SpaceKey))
+        {
+            _paused = !_paused;
         }
         if (SplashKit.KeyDown(KeyCode.WKey) || SplashKit.KeyDown(KeyCode.UpKey))
         {
@@ -155,7 +163,8 @@ public class Instance
                     throw new Exception("File is empty");
                 }
                 // read instance info
-                string[] temp = reader.ReadLine().Split(',');
+                string line = reader.ReadLine() ?? throw new Exception("Unexpected End of File");
+                string[] temp = line.Split(',');
                 if (temp.Length != 2)
                 {
                     throw new Exception("Invalid instance data");
@@ -168,7 +177,8 @@ public class Instance
                 // read entity info, line by line
                 while (!reader.EndOfStream)
                 {
-                    List<string> data = reader.ReadLine().Split(',').ToList();
+                    line = reader.ReadLine() ?? throw new Exception("Unexpected End of File");
+                    List<string> data = line.Split(',').ToList();
                     string entityID = data[0];
                     data.RemoveAt(0);
                     // potentially use an enumeration, but using a string makes the save more readable
