@@ -32,8 +32,8 @@ public static class Globals
     public static Color GridColor = SplashKit.RGBColor(200, 200, 200);
     public static Color ItemPlaceholderColor = SplashKit.RGBColor(120, 120, 120);
     // Gameplay constants
-    public static double ItemSize = 0.5; // effectively acts as padding between items (tiles)
-    public static int CropHarvestTime = 4 * fps; // in ticks
-    public static int RecipeTime = 2 * fps; // in ticks
+    public static double ItemSize = 0.25; // effectively acts as padding between items (tiles)
+    public static int CropHarvestTime = (int)(0.5 * fps); // in ticks
+    public static int RecipeTime = (int)(1 * fps); // in ticks
     public static double DefaultConveyorSpeed = 1.0;
 }
