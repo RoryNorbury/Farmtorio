@@ -2,16 +2,19 @@ namespace Core;
 
 using SplashKitSDK;
 
-public class Loader : Entity
+public class Loader : ItemMover
 {
     public override EntityID ID => EntityID.Loader;
     // speed at which items are moved (tiles per second)
-    public double Speed = Globals.DefaultConveyorSpeed;
+    public override double Speed { get; set; } = Globals.DefaultConveyorSpeed;
     // needs to be stored in order
-    public List<ConveyorItem> Items = [];
+    public override List<ConveyorItem> Items { get; set; } = [];
     // entity in front of this one
     public Entity? NextEntity = null;
     public Entity? PreviousEntity = null;
+
+    public override double InputPosition => -1.0;
+    public override double OutputPosition => 1.0;
     public Loader() : base() { }
     public Loader(double speed, List<ConveyorItem> items, Point2D position, OrientationID orientation, int textureIndex) : base(position, orientation, textureIndex)
     {
@@ -65,177 +68,13 @@ public class Loader : Entity
             PreviousEntity.Tick(dt);
         }
 
-        double dp = Speed * dt;
         // iterate in reverse order to ensure smooth flow
         for (int i = Items.Count - 1; i >= 0; i--)
         {
-            ConveyorItem item = Items[i];
-
-            // if this item is first
-            if (i == Items.Count - 1)
-            {
-                // try to move item to next entity
-                if (MoveItemToNextEntity(item, NextEntity, dp))
-                {
-                    Items.RemoveAt(i);
-                }
-            }
-            // if this item is not first
-            else
-            {
-                ConveyorItem nextItem = Items[i + 1];
-                double dist = nextItem.Progress - item.Progress; // distance between current and next item
-
-                // only move if there is space between items
-                if (dist > Globals.ItemSize)
-                {
-                    // if moving by dp will result in items that are too close, move them so the distance is equal to ItemSize
-                    if (dist - dp < Globals.ItemSize)
-                    {
-                        item.Progress += dp - (dist - Globals.ItemSize);
-                    }
-                    else
-                    {
-                        item.Progress += dp;
-                    }
-                    if (item.Progress >= 2.0)
-                    {
-                        throw new Exception($"Error moving item: item {i} of {Items.Count} has unexpectedly gone off the end of conveyor");
-                    }
-                }
-            }
+            MoveItemToNextEntity(i, NextEntity, dt);
         }
 
         // attempt to grab an item from previous entity
-        if (MoveItemFromPreviousEntity(PreviousEntity, dp))
-        {
-            // currently just do nothing
-        }
-    }
-    // moves item and attempts to add it to next entity (returns true if successful)
-    public bool MoveItemToNextEntity(ConveyorItem item, Entity nextEntity, double dp)
-    {
-        // if next entity has input slots
-        if (nextEntity is IHasInputSlots hasInput)
-        {
-            if (item.Progress + dp >= 2.0)
-            {
-                foreach (InventorySlot slot in hasInput.InputSlots)
-                {
-                    if (slot.AddItems(1, item.ItemID)) { return true; }
-                }
-            }
-            else
-            {
-                item.Progress = Math.Min(item.Progress + dp, 2.0);
-                return false;
-            }
-        }
-        // if next entity is a conveyor
-        else if (nextEntity is Conveyor conveyor)
-        {
-            // easy check if conveyor only has one item
-            if (conveyor.Items.Count > 0)
-            {
-                ConveyorItem nextItem = conveyor.Items[0];
-                double dist = nextItem.Progress - item.Progress + 2; // distance between current and next item
-
-                // only move if there is space between items
-                if (dist > Globals.ItemSize)
-                {
-                    // if moving by dp will result in items that are too close, move them so the distance is equal to ItemSize
-                    if (dist - dp < Globals.ItemSize)
-                    {
-                        item.Progress += dp - (dist - Globals.ItemSize);
-                    }
-                    else
-                    {
-                        item.Progress += dp;
-                    }
-                    if (item.Progress >= 2.0)
-                    {
-                        // move item to next conveyor
-                        item.Progress -= 2.0;
-                        conveyor.Items.Insert(0, item);
-                        return true;
-                    }
-                }
-                return false;
-            }
-            else
-            {
-                item.Progress += dp;
-                if (item.Progress >= 2.0)
-                {
-                    // move item to next conveyor
-                    item.Progress -= 2.0;
-                    conveyor.Items.Insert(0, item);
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        }
-        return false;
-    }
-    public bool MoveItemFromPreviousEntity(Entity previousEntity, double dp)
-    {
-        if (previousEntity is Conveyor conveyor)
-        {
-            // conveyor needs to face into the loader (subject to change)
-            // if (conveyor.Orientation != Orientation)
-            // {
-            //     return false;
-            // }
-            // do nothing if there are no items to move
-            if (conveyor.Items.Count == 0)
-            {
-                return false;
-            }
-            else
-            // checks done, now grab item
-            {
-                // if there is space for the item -- shouldn't this be checked first??
-                if (Items.Count == 0 || Items[0].Progress > Globals.ItemSize)
-                {
-                    // check each item to see if it is in grab range (only really affects conveyors not facing the loader)
-                    for (int i = 0; i < conveyor.Items.Count; i++)
-                    {
-                        // only grab items if they are within one frame of movement of the pickup point (0.0)
-                        if (conveyor.Items[i].Progress <= dp)
-                        {
-                            // currently items may not move the full distance when moving into a loader
-                            Items.Insert(0, new ConveyorItem(conveyor.Items.Last().ItemID, 0));
-                            conveyor.Items.RemoveAt(i);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        else if (previousEntity is IHasOutputSlots hasOutput)
-        {
-            foreach (InventorySlot slot in hasOutput.OutputSlots)
-            {
-                if (slot.ItemCount > 0)
-                {
-                    // if there is space for the item
-                    if (Items.Count == 0 || Items[0].Progress > Globals.ItemSize)
-                    {
-                        // currently items may not move the full distance when moving into a loader
-                        Items.Insert(0, new ConveyorItem(slot.Item, 0));
-                        slot.RemoveItems(1);
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-            }
-        }
-        return false;
+        MoveItemFromPreviousEntity(PreviousEntity, dt);
     }
 }
